@@ -13,6 +13,10 @@ export class OrderService {
     return this.http.get<any[]>(this.API_URL);
   }
 
+  createOrder(order: { descricao: string, valor: number }): Observable<any> {
+    return this.http.post<any>(this.API_URL, order);
+  }
+
   getKpis(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/stats`);
   }
