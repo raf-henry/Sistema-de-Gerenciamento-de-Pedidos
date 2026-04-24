@@ -1,0 +1,76 @@
+<div class="dashboard-layout">
+  <nav class="navbar">
+    <div class="logo">
+      <h1>OrderSys</h1>
+    </div>
+    <div class="user-menu">
+      <span class="user-greeting">Olá, Administrador</span>
+      <button class="logout-btn" (click)="logout()">Sair</button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div>
+        <h2>Visão Geral</h2>
+        <p>Acompanhe o fluxo de pedidos e clientes.</p>
+      </div>
+      <button class="btn-primary">+ Novo Pedido</button>
+    </div>
+
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Pedidos Hoje</div>
+        <div class="kpi-value">{{ stats.todayOrders }}</div>
+        <div class="kpi-trend positive">↑ Atualizado</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Aguardando Pagamento</div>
+        <div class="kpi-value alert">{{ stats.pendingPayment }}</div>
+        <div class="kpi-trend">Requer atenção</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Novos Clientes (Mês)</div>
+        <div class="kpi-value">{{ stats.newClients }}</div>
+        <div class="kpi-trend positive">↑ Crescimento</div>
+      </div>
+    </section>
+
+    <section class="recent-orders">
+      <h3>Últimos Pedidos</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>Nº Pedido</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Valor (R$)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.id }}</td>
+            <td>{{ order.cliente }}</td>
+            <td>{{ order.data }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'success': order.status === 'Concluído',
+                'warning': order.status === 'Processando',
+                'danger': order.status === 'Cancelado'
+              }">{{ order.status }}</span>
+            </td>
+            <td>R$ {{ order.valor | number:'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="orders.length === 0">
+            <td colspan="5" style="text-align: center;">Nenhum pedido encontrado.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>

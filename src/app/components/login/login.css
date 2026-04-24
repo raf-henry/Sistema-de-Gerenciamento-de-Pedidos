@@ -1,0 +1,99 @@
+/* Centraliza o container principal na tela inteira */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa 100% da altura da tela */
+  background-color: #f4f7f6; /* Fundo cinza claro */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilo da caixa branca do formulário */
+.login-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.login-box h2 {
+  margin: 0 0 10px 0;
+  color: #333333;
+}
+
+.login-box p {
+  color: #777777;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+/* Agrupamento dos inputs e labels */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555555;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 15px;
+  transition: border-color 0.3s;
+}
+
+/* Efeito ao clicar no input */
+.input-group input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+/* Estilo do botão principal */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff; /* Azul padrão */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
+/* Rodapé do formulário */
+.login-footer {
+  margin-top: 25px;
+  font-size: 14px;
+}
+
+.login-footer a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.login-footer a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
