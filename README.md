@@ -1,59 +1,81 @@
-# MeuPrimeiroApp
+# Meu Primeiro App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Este é um projeto full-stack que consiste em uma aplicação de gerenciamento de pedidos com autenticação de usuários. O projeto utiliza Angular para o frontend e Spring Boot para o backend.
 
-## Development server
+## 🚀 Tecnologias Utilizadas
 
-To start a local development server, run:
+### Frontend
+- **Angular**: Framework para construção da interface do usuário.
+- **TypeScript**: Linguagem base para o desenvolvimento Angular.
+- **CSS**: Estilização dos componentes.
+- **Vitest**: Runner de testes unitários.
 
+### Backend
+- **Spring Boot**: Framework Java para criação de microserviços.
+- **Spring Security**: Gerenciamento de autenticação e autorização.
+- **Spring Data JPA**: Abstração para persistência de dados.
+- **PostgreSQL**: Banco de dados relacional.
+- **Lombok**: Biblioteca para reduzir código boilerplate em Java.
+- **Maven**: Gerenciador de dependências e automação de build.
+
+## 📁 Estrutura do Projeto
+
+O repositório está organizado da seguinte forma:
+
+- `/src`: Contém o código fonte do frontend Angular.
+- `/projeto/projeto`: Contém o código fonte do backend Spring Boot.
+- `/public`: Ativos estáticos do frontend.
+
+## 🛠️ Como Executar o Projeto
+
+### Pré-requisitos
+- Node.js (versão recomendada v18+)
+- Java JDK 17+
+- Maven
+- PostgreSQL
+
+### Configuração do Banco de Dados
+1. Certifique-se de que o PostgreSQL está em execução.
+2. Crie um banco de dados chamado `Projeto01`.
+3. Configure a variável de ambiente `DB_PASSWORD` com a senha do seu usuário PostgreSQL.
+
+### Executando o Backend
+1. Navegue até o diretório do backend:
+   ```bash
+   cd projeto/projeto
+   ```
+2. Execute a aplicação usando Maven:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+   O backend estará disponível em `http://localhost:8081`.
+
+### Executando o Frontend
+1. Navegue até a raiz do projeto:
+   ```bash
+   npm install
+   ```
+2. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm start
+   ```
+   O frontend estará disponível em `http://localhost:4200`.
+
+## 🧪 Testes
+
+### Frontend
+Para rodar os testes unitários do frontend:
 ```bash
-ng serve
+npm test
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### Backend
+Para rodar os testes do backend:
 ```bash
-ng generate component component-name
+cd projeto/projeto
+./mvnw test
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📝 Funcionalidades
+- **Autenticação**: Registro de novos usuários e login seguro.
+- **Gerenciamento de Pedidos**: Visualização e gerenciamento de pedidos.
