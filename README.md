@@ -1,4 +1,4 @@
-# Meu Primeiro App
+# Sistema de Gerencimanto de Pedidos
 
 Este é um projeto full-stack que consiste em uma aplicação de gerenciamento de pedidos com autenticação de usuários. O projeto utiliza Angular para o frontend e Spring Boot para o backend.
 
