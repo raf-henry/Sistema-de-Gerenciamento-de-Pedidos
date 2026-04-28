@@ -140,12 +140,20 @@ public class GastoController {
     public ResponseEntity<?> getStats(@AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
         List<Gasto> gastos = gastoRepository.findByUsuario(user);
+        
         long totalGastos = gastos.size();
         double valorTotal = gastos.stream().mapToDouble(Gasto::getValor).sum();
         
+        // Calcula o gasto fixo mensal (soma das parcelas de gastos parcelados)
+        double gastoFixoMensal = gastos.stream()
+            .filter(g -> "Parcelado".equalsIgnoreCase(g.getStatus()))
+            .mapToDouble(g -> g.getValorParcela() != null ? g.getValorParcela() : 0.0)
+            .sum();
+        
         return ResponseEntity.ok(Map.of(
             "totalGastos", totalGastos,
-            "valorTotal", valorTotal
+            "valorTotal", valorTotal,
+            "gastoFixoMensal", gastoFixoMensal
         ));
     }
 }

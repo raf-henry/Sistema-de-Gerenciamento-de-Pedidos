@@ -20,7 +20,8 @@ export class Home implements OnInit {
   expenses = signal<any[]>([]);
   stats = signal({
     totalGastos: 0,
-    valorTotal: 0
+    valorTotal: 0,
+    gastoFixoMensal: 0
   });
 
   userName = localStorage.getItem('username') || 'Usuário';
@@ -51,7 +52,8 @@ export class Home implements OnInit {
       next: (data) => {
         this.stats.set({
           totalGastos: data.totalGastos,
-          valorTotal: data.valorTotal
+          valorTotal: data.valorTotal,
+          gastoFixoMensal: data.gastoFixoMensal || 0
         });
       },
       error: (err) => console.error('Erro ao buscar estatísticas', err)
