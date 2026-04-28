@@ -1,5 +1,6 @@
 package com.projetopessoal.projeto.controller;
 
+import com.projetopessoal.projeto.config.JwtUtils;
 import com.projetopessoal.projeto.model.User;
 import com.projetopessoal.projeto.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,16 @@ public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        // ... (código existente)
         String email = credentials.get("email");
         String password = credentials.get("password");
 
@@ -32,7 +34,12 @@ public class AuthController {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                return ResponseEntity.ok(Map.of("message", "Login successful", "username", user.getUsername()));
+                String token = jwtUtils.generateToken(user.getUsername());
+                return ResponseEntity.ok(Map.of(
+                        "token", token,
+                        "username", user.getUsername(),
+                        "message", "Login successful"
+                ));
             }
         }
         return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));

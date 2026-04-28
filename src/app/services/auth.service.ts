@@ -12,19 +12,12 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.API_URL}/login`, credentials).pipe(
       tap((response: any) => {
-        // Salva as credenciais em Base64 para usar nas próximas requisições
-        const authData = btoa(`${credentials.email}:${credentials.password}`);
-        localStorage.setItem('auth_token', authData);
-        localStorage.setItem('username', credentials.email);
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('username', credentials.email);
+        }
       })
     );
-  }
-
-  getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('auth_token');
-    return new HttpHeaders({
-      'Authorization': `Basic ${token}`
-    });
   }
 
   logout() {
