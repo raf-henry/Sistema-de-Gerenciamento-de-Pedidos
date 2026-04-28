@@ -24,11 +24,10 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**", "/api/auth/**", "/api/pedidos/**").permitAll()
+                .requestMatchers("/h2-console/**", "/api/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults())
-            .formLogin(Customizer.withDefaults());
+            .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
@@ -36,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Permite qualquer origem
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Restrito ao frontend
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

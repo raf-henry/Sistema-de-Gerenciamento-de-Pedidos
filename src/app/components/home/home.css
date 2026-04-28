@@ -8,7 +8,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
+  padding: 16px 24px;
   background: var(--pure-white);
   border-bottom: 1px solid var(--border-lavender);
   position: sticky;
@@ -80,7 +80,7 @@
   margin: 12px 0 0 0;
 }
 
-.btn-add-order {
+.btn-add-expense {
   background-color: var(--expo-black) !important;
   color: var(--pure-white) !important;
   padding: 12px 24px !important;
@@ -93,7 +93,7 @@
   box-shadow: none !important;
 }
 
-.btn-add-order:hover {
+.btn-add-expense:hover {
   opacity: 0.9 !important;
   transform: none !important;
 }
@@ -140,7 +140,7 @@
 .kpi-trend.positive { color: #10b981; }
 
 /* Table Section */
-.recent-orders {
+.recent-expenses {
   background: var(--pure-white);
   padding: 32px;
   border-radius: 8px;
@@ -148,7 +148,7 @@
   box-shadow: rgba(0, 0, 0, 0.08) 0px 3px 6px;
 }
 
-.recent-orders h3 {
+.recent-expenses h3 {
   font-size: 24px;
   font-weight: 700;
   margin: 0 0 24px 0;
@@ -180,6 +180,11 @@ td {
   border-bottom: 1px solid var(--cloud-gray);
   font-size: 15px;
   color: var(--near-black);
+}
+
+/* Capitaliza a descrição na tabela */
+td:nth-child(2) {
+  text-transform: capitalize;
 }
 
 .badge {
@@ -243,7 +248,7 @@ td {
 .modal-card {
   background: var(--pure-white);
   width: 100%;
-  max-width: 520px; /* Aumentado de 440px para 520px */
+  max-width: 520px;
   border-radius: 16px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 40px, rgba(0, 0, 0, 0.05) 0px 1px 3px;
   overflow: hidden;
@@ -257,7 +262,7 @@ td {
 }
 
 .modal-header {
-  padding: 40px 40px 24px 40px; /* Aumentado o padding */
+  padding: 40px 40px 24px 40px;
   border: none;
   display: flex;
   justify-content: space-between;
@@ -266,7 +271,7 @@ td {
 
 .modal-header h3 {
   margin: 0;
-  font-size: 28px; /* Título maior */
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -1.2px;
   color: var(--expo-black);
@@ -297,7 +302,7 @@ td {
 }
 
 .modal-body .form-group {
-  margin-bottom: 32px; /* Espaço aumentado entre Descrição e Valor */
+  margin-bottom: 32px;
 }
 
 .modal-body .form-group label {
@@ -325,12 +330,12 @@ td {
 }
 
 .modal-footer {
-  padding: 20px 40px; /* Altura reduzida de 32px para 20px */
+  padding: 20px 40px;
   background: #f9f9fb;
   border-top: 1px solid var(--border-lavender);
   display: flex;
-  justify-content: center; /* Centraliza os botões no meio */
-  gap: 12px; /* Espaço entre os botões */
+  justify-content: center;
+  gap: 12px;
 }
 
 .btn-save {
@@ -350,9 +355,9 @@ td {
 }
 
 .btn-cancel {
-  background-color: var(--pure-white); /* Fundo branco para destacar do cinza */
+  background-color: var(--pure-white);
   color: var(--near-black);
-  border: 1px solid var(--input-border); /* Borda para definir o botão */
+  border: 1px solid var(--input-border);
   padding: 14px 24px;
   border-radius: 9999px;
   font-weight: 600;

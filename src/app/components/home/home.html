@@ -1,10 +1,10 @@
 <div class="dashboard-layout">
   <nav class="navbar">
     <div class="logo">
-      <h1>OrderSys</h1>
+      <h1>FinanceSys</h1>
     </div>
     <div class="user-menu">
-      <span class="user-greeting">Olá, Administrador</span>
+      <span class="user-greeting">Olá, {{ userName }}</span>
       <button class="logout-btn" (click)="logout()">Sair</button>
     </div>
   </nav>
@@ -12,11 +12,11 @@
   <main class="main-content">
     <div class="page-header">
       <div>
-        <h2>Visão Geral</h2>
-        <p>Acompanhe o fluxo de pedidos e clientes.</p>
+        <h2>Meus Gastos</h2>
+        <p>Acompanhe e controle suas despesas pessoais.</p>
       </div>
-      <button class="btn-add-order" (click)="abrirModalParaNovo()">
-        + Novo Pedido
+      <button class="btn-add-expense" (click)="abrirModalParaNovo()">
+        + Novo Gasto
       </button>
     </div>
 
@@ -24,23 +24,23 @@
     <div class="modal-overlay" *ngIf="showModal">
       <div class="modal-card">
         <div class="modal-header">
-          <h3>{{ isEditing ? 'Editar Pedido' : 'Cadastrar Novo Pedido' }}</h3>
+          <h3>{{ isEditing ? 'Editar Gasto' : 'Cadastrar Novo Gasto' }}</h3>
           <button class="close-x" (click)="showModal = false">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>Descrição do Produto</label>
-            <input type="text" [(ngModel)]="novoPedido.descricao" placeholder="Ex: Notebook Dell">
+            <label>Descrição da Despesa</label>
+            <input type="text" [(ngModel)]="novoGasto.descricao" placeholder="Ex: Aluguel, Supermercado">
           </div>
           <div class="form-group">
             <label>Valor (R$)</label>
-            <input type="number" [(ngModel)]="novoPedido.valor">
+            <input type="number" [(ngModel)]="novoGasto.valor">
           </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" (click)="showModal = false">Cancelar</button>
-          <button class="btn-save" (click)="salvarPedido()">
-            {{ isEditing ? 'Atualizar Pedido' : 'Salvar Pedido' }}
+          <button class="btn-save" (click)="salvarGasto()">
+            {{ isEditing ? 'Atualizar Gasto' : 'Salvar Gasto' }}
           </button>
         </div>
       </div>
@@ -48,29 +48,29 @@
 
     <section class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-title">Pedidos Totais</div>
-        <div class="kpi-value">{{ stats().todayOrders }}</div>
+        <div class="kpi-title">Total de Lançamentos</div>
+        <div class="kpi-value">{{ stats().totalGastos }}</div>
         <div class="kpi-trend positive">↑ Atualizado</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-title">Aguardando Pagamento</div>
+        <div class="kpi-title">Aguardando Revisão</div>
         <div class="kpi-value alert">0</div>
-        <div class="kpi-trend">Requer atenção</div>
+        <div class="kpi-trend">Tudo em dia</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-title">Faturamento Total</div>
+        <div class="kpi-title">Total Gasto</div>
         <div class="kpi-value">R$ {{ stats().valorTotal | number:'1.2-2' }}</div>
-        <div class="kpi-trend positive">↑ Crescimento</div>
+        <div class="kpi-trend negative" style="color: #ef4444;">↓ Fluxo de caixa</div>
       </div>
     </section>
 
-    <section class="recent-orders">
-      <h3>Últimos Pedidos</h3>
+    <section class="recent-expenses">
+      <h3>Histórico de Despesas</h3>
       <div class="table-container">
         <table>
           <thead>
           <tr>
-            <th>Nº Pedido</th>
+            <th>ID</th>
             <th>Descrição</th>
             <th>Data</th>
             <th>Status</th>
@@ -79,27 +79,27 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let order of orders()">
-            <td>#{{ order.id }}</td>
-            <td>{{ order.descricao }}</td>
-            <td>{{ order.dataPedido | date:'dd/MM/yyyy HH:mm' }}</td>
+          <tr *ngFor="let gasto of expenses()">
+            <td>#{{ gasto.id }}</td>
+            <td>{{ gasto.descricao }}</td>
+            <td>{{ gasto.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>
-              <span class="badge success">Concluído</span>
+              <span class="badge success">Pago</span>
             </td>
-            <td>R$ {{ order.valor | number:'1.2-2' }}</td>
+            <td>R$ {{ gasto.valor | number:'1.2-2' }}</td>
             <td>
               <div class="action-buttons">
-                <button class="btn-icon edit" (click)="abrirModalParaEditar(order)" title="Editar">
+                <button class="btn-icon edit" (click)="abrirModalParaEditar(gasto)" title="Editar">
                   ✏️
                 </button>
-                <button class="btn-icon delete" (click)="deletarPedido(order.id)" title="Excluir">
+                <button class="btn-icon delete" (click)="deletarGasto(gasto.id)" title="Excluir">
                   🗑️
                 </button>
               </div>
             </td>
           </tr>
-          <tr *ngIf="orders().length === 0">
-            <td colspan="6" style="text-align: center;">Nenhum pedido encontrado.</td>
+          <tr *ngIf="expenses().length === 0">
+            <td colspan="6" style="text-align: center;">Nenhuma despesa encontrada.</td>
           </tr>
           </tbody>
         </table>

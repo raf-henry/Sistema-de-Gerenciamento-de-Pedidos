@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrderService } from '../../services/order.service';
+import { ExpenseService } from '../../services/expense.service';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,19 +14,22 @@ import { FormsModule } from '@angular/forms';
 })
 export class Home implements OnInit {
   private router = inject(Router);
-  private orderService = inject(OrderService);
+  private expenseService = inject(ExpenseService);
+  private authService = inject(AuthService);
 
-  orders = signal<any[]>([]);
+  expenses = signal<any[]>([]);
   stats = signal({
-    todayOrders: 0,
+    totalGastos: 0,
     valorTotal: 0
   });
 
+  userName = localStorage.getItem('username') || 'Usuário';
+
   showModal = false;
   isEditing = false;
-  selectedOrderId: number | null = null;
+  selectedExpenseId: number | null = null;
   
-  novoPedido = {
+  novoGasto = {
     descricao: '',
     valor: 0
   };
@@ -35,15 +39,15 @@ export class Home implements OnInit {
   }
 
   loadDashboardData() {
-    this.orderService.getOrders().subscribe({
-      next: (data) => this.orders.set(data),
-      error: (err) => console.error('Erro ao buscar pedidos', err)
+    this.expenseService.getExpenses().subscribe({
+      next: (data) => this.expenses.set(data),
+      error: (err) => console.error('Erro ao buscar gastos', err)
     });
 
-    this.orderService.getKpis().subscribe({
+    this.expenseService.getKpis().subscribe({
       next: (data) => {
         this.stats.set({
-          todayOrders: data.totalPedidos,
+          totalGastos: data.totalGastos,
           valorTotal: data.valorTotal
         });
       },
@@ -53,30 +57,34 @@ export class Home implements OnInit {
 
   abrirModalParaNovo() {
     this.isEditing = false;
-    this.selectedOrderId = null;
-    this.novoPedido = { descricao: '', valor: 0 };
+    this.selectedExpenseId = null;
+    this.novoGasto = { descricao: '', valor: 0 };
     this.showModal = true;
   }
 
-  abrirModalParaEditar(pedido: any) {
+  abrirModalParaEditar(gasto: any) {
     this.isEditing = true;
-    this.selectedOrderId = pedido.id;
-    this.novoPedido = { 
-      descricao: pedido.descricao, 
-      valor: pedido.valor 
+    this.selectedExpenseId = gasto.id;
+    this.novoGasto = { 
+      descricao: gasto.descricao, 
+      valor: gasto.valor 
     };
     this.showModal = true;
   }
 
-  salvarPedido() {
-    if (this.novoPedido.descricao && this.novoPedido.valor > 0) {
-      if (this.isEditing && this.selectedOrderId) {
-        this.orderService.updateOrder(this.selectedOrderId, this.novoPedido).subscribe({
+  salvarGasto() {
+    if (this.novoGasto.descricao && this.novoGasto.valor > 0) {
+      // Capitaliza a primeira letra
+      const descricaoFormatada = this.novoGasto.descricao.charAt(0).toUpperCase() + this.novoGasto.descricao.slice(1);
+      const gastoParaSalvar = { ...this.novoGasto, descricao: descricaoFormatada };
+
+      if (this.isEditing && this.selectedExpenseId) {
+        this.expenseService.updateExpense(this.selectedExpenseId, gastoParaSalvar).subscribe({
           next: () => this.finalizarOperacao(),
           error: (err) => alert('Erro ao atualizar: ' + err.message)
         });
       } else {
-        this.orderService.createOrder(this.novoPedido).subscribe({
+        this.expenseService.createExpense(gastoParaSalvar).subscribe({
           next: () => this.finalizarOperacao(),
           error: (err) => alert('Erro ao salvar: ' + err.message)
         });
@@ -84,9 +92,9 @@ export class Home implements OnInit {
     }
   }
 
-  deletarPedido(id: number) {
-    if (confirm('Tem certeza que deseja excluir este pedido?')) {
-      this.orderService.deleteOrder(id).subscribe({
+  deletarGasto(id: number) {
+    if (confirm('Tem certeza que deseja excluir este gasto?')) {
+      this.expenseService.deleteExpense(id).subscribe({
         next: () => this.loadDashboardData(),
         error: (err) => alert('Erro ao excluir: ' + err.message)
       });
@@ -95,12 +103,12 @@ export class Home implements OnInit {
 
   private finalizarOperacao() {
     this.showModal = false;
-    this.novoPedido = { descricao: '', margin: 0, valor: 0 } as any; // reset
-    this.novoPedido = { descricao: '', valor: 0 };
+    this.novoGasto = { descricao: '', valor: 0 };
     this.loadDashboardData();
   }
 
   logout() {
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

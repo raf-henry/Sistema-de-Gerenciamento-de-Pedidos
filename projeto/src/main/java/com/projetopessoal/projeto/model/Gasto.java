@@ -5,12 +5,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "pedidos")
+@Table(name = "gastos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pedido {
+public class Gasto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Pedido {
     @Column(nullable = false)
     private Double valor;
 
-    private LocalDateTime dataPedido = LocalDateTime.now();
+    private LocalDateTime dataGasto = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
