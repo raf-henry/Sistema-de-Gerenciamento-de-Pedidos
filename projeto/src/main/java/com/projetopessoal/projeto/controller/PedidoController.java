@@ -49,6 +49,38 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoRepository.findAll());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarPedido(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        try {
+            return pedidoRepository.findById(id).map(pedido -> {
+                if (payload.containsKey("descricao")) {
+                    pedido.setDescricao((String) payload.get("descricao"));
+                }
+                if (payload.containsKey("valor")) {
+                    pedido.setValor(Double.parseDouble(payload.get("valor").toString()));
+                }
+                // Mantém o usuário e a data originais a menos que explicitamente alterado
+                Pedido atualizado = pedidoRepository.save(pedido);
+                return ResponseEntity.ok(atualizado);
+            }).orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Erro ao atualizar pedido: " + e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarPedido(@PathVariable Long id) {
+        try {
+            if (pedidoRepository.existsById(id)) {
+                pedidoRepository.deleteById(id);
+                return ResponseEntity.ok(Map.of("message", "Pedido removido com sucesso"));
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", "Erro ao deletar pedido: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/stats")
     public ResponseEntity<?> getStats() {
         long totalPedidos = pedidoRepository.count();

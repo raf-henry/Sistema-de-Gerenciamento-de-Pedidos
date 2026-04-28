@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  /* Colors from DESING.md */
+  --expo-black: #000000;
+  --near-black: #1c2024;
+  --link-cobalt: #0d74ce;
+  --cloud-gray: #f0f0f3;
+  --pure-white: #ffffff;
+  --slate-gray: #60646c;
+  --border-lavender: #e0e1e6;
+  --input-border: #d9d9e0;
+  
+  /* Spacing */
+  --base-unit: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background-color: var(--cloud-gray);
+  color: var(--near-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--expo-black);
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--link-cobalt);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}

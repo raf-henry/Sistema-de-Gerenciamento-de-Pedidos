@@ -3,92 +3,100 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f7f6;
-  padding: 20px;
+  background-color: var(--cloud-gray);
+  padding: 24px;
 }
 
 .register-card {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background-color: var(--pure-white);
+  padding: 48px 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-lavender);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 3px 6px, rgba(0, 0, 0, 0.07) 0px 2px 4px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   text-align: center;
 }
 
-h2 {
-  margin-bottom: 10px;
-  color: #2c3e50;
+.register-card h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  letter-spacing: -1px;
+  color: var(--expo-black);
 }
 
-p {
-  color: #7f8c8d;
-  margin-bottom: 30px;
+.register-card p {
+  color: var(--slate-gray);
+  margin-bottom: 32px;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .form-group {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-label {
+.form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500;
-  color: #34495e;
+  color: var(--near-black);
+  font-weight: 600;
+  font-size: 14px;
 }
 
-input {
+.form-group input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
+  padding: 12px 16px;
+  background-color: var(--pure-white);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
-  font-size: 16px;
-  transition: border-color 0.3s;
   box-sizing: border-box;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  color: var(--near-black);
+  transition: all 0.2s ease;
 }
 
-input:focus {
+.form-group input:focus {
+  border-color: var(--expo-black);
   outline: none;
-  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
 .btn-register {
   width: 100%;
-  padding: 12px;
-  background-color: #27ae60;
-  color: white;
+  padding: 14px;
+  background-color: var(--expo-black);
+  color: var(--pure-white);
   border: none;
-  border-radius: 6px;
+  border-radius: 9999px; /* Pill shaped as per design doc */
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
+  transition: opacity 0.2s;
+  margin-top: 8px;
 }
 
 .btn-register:hover {
-  background-color: #219150;
+  opacity: 0.9;
 }
 
 .btn-register:disabled {
-  background-color: #bdc3c7;
+  background-color: var(--slate-gray);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .form-footer {
-  margin-top: 20px;
+  margin-top: 32px;
   font-size: 14px;
-  color: #7f8c8d;
+  color: var(--slate-gray);
 }
 
 .form-footer a {
-  color: #3498db;
+  color: var(--link-cobalt);
+  font-weight: 500;
   text-decoration: none;
-  font-weight: 600;
-}
-
-.form-footer a:hover {
-  text-decoration: underline;
 }

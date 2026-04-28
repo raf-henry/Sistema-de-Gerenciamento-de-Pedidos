@@ -15,7 +15,6 @@ export class Home implements OnInit {
   private router = inject(Router);
   private orderService = inject(OrderService);
 
-  // Usando Signals para garantir a atualização da tela
   orders = signal<any[]>([]);
   stats = signal({
     todayOrders: 0,
@@ -23,6 +22,9 @@ export class Home implements OnInit {
   });
 
   showModal = false;
+  isEditing = false;
+  selectedOrderId: number | null = null;
+  
   novoPedido = {
     descricao: '',
     valor: 0
@@ -33,18 +35,11 @@ export class Home implements OnInit {
   }
 
   loadDashboardData() {
-    console.log('Buscando dados do servidor...');
-    
-    // Busca pedidos
     this.orderService.getOrders().subscribe({
-      next: (data) => {
-        console.log('Dados recebidos:', data);
-        this.orders.set(data); // Atualiza o signal
-      },
+      next: (data) => this.orders.set(data),
       error: (err) => console.error('Erro ao buscar pedidos', err)
     });
 
-    // Busca estatísticas
     this.orderService.getKpis().subscribe({
       next: (data) => {
         this.stats.set({
@@ -56,17 +51,53 @@ export class Home implements OnInit {
     });
   }
 
+  abrirModalParaNovo() {
+    this.isEditing = false;
+    this.selectedOrderId = null;
+    this.novoPedido = { descricao: '', valor: 0 };
+    this.showModal = true;
+  }
+
+  abrirModalParaEditar(pedido: any) {
+    this.isEditing = true;
+    this.selectedOrderId = pedido.id;
+    this.novoPedido = { 
+      descricao: pedido.descricao, 
+      valor: pedido.valor 
+    };
+    this.showModal = true;
+  }
+
   salvarPedido() {
     if (this.novoPedido.descricao && this.novoPedido.valor > 0) {
-      this.orderService.createOrder(this.novoPedido).subscribe({
-        next: () => {
-          this.showModal = false;
-          this.novoPedido = { descricao: '', valor: 0 };
-          this.loadDashboardData();
-        },
-        error: (err) => alert('Erro ao salvar: ' + err.message)
+      if (this.isEditing && this.selectedOrderId) {
+        this.orderService.updateOrder(this.selectedOrderId, this.novoPedido).subscribe({
+          next: () => this.finalizarOperacao(),
+          error: (err) => alert('Erro ao atualizar: ' + err.message)
+        });
+      } else {
+        this.orderService.createOrder(this.novoPedido).subscribe({
+          next: () => this.finalizarOperacao(),
+          error: (err) => alert('Erro ao salvar: ' + err.message)
+        });
+      }
+    }
+  }
+
+  deletarPedido(id: number) {
+    if (confirm('Tem certeza que deseja excluir este pedido?')) {
+      this.orderService.deleteOrder(id).subscribe({
+        next: () => this.loadDashboardData(),
+        error: (err) => alert('Erro ao excluir: ' + err.message)
       });
     }
+  }
+
+  private finalizarOperacao() {
+    this.showModal = false;
+    this.novoPedido = { descricao: '', margin: 0, valor: 0 } as any; // reset
+    this.novoPedido = { descricao: '', valor: 0 };
+    this.loadDashboardData();
   }
 
   logout() {

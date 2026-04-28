@@ -23,7 +23,7 @@ Este é um projeto full-stack que consiste em uma aplicação de gerenciamento d
 O repositório está organizado da seguinte forma:
 
 - `/src`: Contém o código fonte do frontend Angular.
-- `/projeto/projeto`: Contém o código fonte do backend Spring Boot.
+- `/projeto`: Contém o código fonte do backend Spring Boot.
 - `/public`: Ativos estáticos do frontend.
 
 ## 🛠️ Como Executar o Projeto
@@ -39,27 +39,38 @@ O repositório está organizado da seguinte forma:
 2. Crie um banco de dados chamado `Projeto01`.
 3. Configure a variável de ambiente `DB_PASSWORD` com a senha do seu usuário PostgreSQL.
 
-### Executando o Backend
+### ⚡ Executando Ambos (Simultaneamente)
+Para facilitar o desenvolvimento, você pode iniciar o frontend e o backend com um único comando na raiz do projeto:
+
+1. Instale as dependências:
+   ```bash
+   npm install
+   ```
+2. **Configuração da Senha:** O projeto espera uma variável de ambiente `DB_PASSWORD`. Você pode configurar isso diretamente no `package.json` no script `dev` ou definir no seu sistema.
+3. Execute o comando:
+   ```bash
+   npm run dev
+   ```
+
+> **⚠️ Aviso:** Certifique-se de que a senha no script `dev` do `package.json` coincide com a senha do seu usuário PostgreSQL local. Se preferir não deixar a senha no arquivo, defina a variável de ambiente `DB_PASSWORD` no seu sistema operacional.
+
+### Executando Manualmente
+
+#### Backend
 1. Navegue até o diretório do backend:
    ```bash
-   cd projeto/projeto
+   cd projeto
    ```
 2. Execute a aplicação usando Maven:
    ```bash
    ./mvnw spring-boot:run
    ```
-   O backend estará disponível em `http://localhost:8081`.
 
-### Executando o Frontend
-1. Navegue até a raiz do projeto:
-   ```bash
-   npm install
-   ```
-2. Inicie o servidor de desenvolvimento:
+#### Frontend
+1. Na raiz do projeto:
    ```bash
    npm start
    ```
-   O frontend estará disponível em `http://localhost:4200`.
 
 ## 🧪 Testes
 
@@ -72,7 +83,7 @@ npm test
 ### Backend
 Para rodar os testes do backend:
 ```bash
-cd projeto/projeto
+cd projeto
 ./mvnw test
 ```
 

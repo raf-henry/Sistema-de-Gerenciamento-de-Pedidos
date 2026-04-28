@@ -17,6 +17,14 @@ export class OrderService {
     return this.http.post<any>(this.API_URL, order);
   }
 
+  updateOrder(id: number, order: { descricao: string, valor: number }): Observable<any> {
+    return this.http.put<any>(`${this.API_URL}/${id}`, order);
+  }
+
+  deleteOrder(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.API_URL}/${id}`);
+  }
+
   getKpis(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/stats`);
   }

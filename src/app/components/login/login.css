@@ -1,99 +1,102 @@
-/* Centraliza o container principal na tela inteira */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ocupa 100% da altura da tela */
-  background-color: #f4f7f6; /* Fundo cinza claro */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background-color: var(--cloud-gray);
+  padding: 24px;
 }
 
-/* Estilo da caixa branca do formulário */
 .login-box {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 8px; /* Bordas arredondadas */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  background-color: var(--pure-white);
+  padding: 48px 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-lavender);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 3px 6px, rgba(0, 0, 0, 0.07) 0px 2px 4px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   text-align: center;
-  box-sizing: border-box;
 }
 
 .login-box h2 {
-  margin: 0 0 10px 0;
-  color: #333333;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  letter-spacing: -1px;
+  color: var(--expo-black);
 }
 
 .login-box p {
-  color: #777777;
-  margin-bottom: 30px;
-  font-size: 14px;
+  color: var(--slate-gray);
+  margin-bottom: 32px;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
-/* Agrupamento dos inputs e labels */
 .input-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: left;
 }
 
 .input-group label {
   display: block;
   margin-bottom: 8px;
-  color: #555555;
+  color: var(--near-black);
   font-weight: 600;
   font-size: 14px;
 }
 
 .input-group input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
+  padding: 12px 16px;
+  background-color: var(--pure-white);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
   box-sizing: border-box;
-  font-size: 15px;
-  transition: border-color 0.3s;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  color: var(--near-black);
+  transition: all 0.2s ease;
 }
 
-/* Efeito ao clicar no input */
 .input-group input:focus {
-  border-color: #007bff;
+  border-color: var(--expo-black);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Estilo do botão principal */
 .login-btn {
   width: 100%;
   padding: 14px;
-  background-color: #007bff; /* Azul padrão */
-  color: white;
+  background-color: var(--expo-black);
+  color: var(--pure-white);
   border: none;
-  border-radius: 4px;
+  border-radius: 9999px; /* Pill shaped as per design doc */
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
+  transition: opacity 0.2s;
+  margin-top: 8px;
 }
 
 .login-btn:hover {
-  background-color: #0056b3; /* Azul mais escuro no hover */
+  opacity: 0.9;
 }
 
-/* Rodapé do formulário */
 .login-footer {
-  margin-top: 25px;
+  margin-top: 32px;
   font-size: 14px;
+  color: var(--slate-gray);
 }
 
 .login-footer a {
-  color: #007bff;
+  color: var(--link-cobalt);
+  font-weight: 500;
   text-decoration: none;
-  transition: color 0.3s;
 }
 
-.login-footer a:hover {
-  color: #0056b3;
-  text-decoration: underline;
+.login-footer p {
+  margin-top: 16px;
+  margin-bottom: 0;
+  font-size: 14px;
 }

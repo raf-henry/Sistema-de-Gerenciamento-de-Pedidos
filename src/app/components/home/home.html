@@ -15,17 +15,16 @@
         <h2>Visão Geral</h2>
         <p>Acompanhe o fluxo de pedidos e clientes.</p>
       </div>
-      <button class="btn-add-order" (click)="showModal = true" 
-              style="background-color: #2563eb !important; color: white !important; padding: 12px 24px !important; border-radius: 8px !important; border: none !important; font-weight: bold !important; cursor: pointer !important; display: inline-block !important;">
+      <button class="btn-add-order" (click)="abrirModalParaNovo()">
         + Novo Pedido
       </button>
     </div>
 
-    <!-- Modal de Cadastro -->
+    <!-- Modal de Cadastro/Edição -->
     <div class="modal-overlay" *ngIf="showModal">
       <div class="modal-card">
         <div class="modal-header">
-          <h3>Cadastrar Novo Pedido</h3>
+          <h3>{{ isEditing ? 'Editar Pedido' : 'Cadastrar Novo Pedido' }}</h3>
           <button class="close-x" (click)="showModal = false">&times;</button>
         </div>
         <div class="modal-body">
@@ -40,7 +39,9 @@
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" (click)="showModal = false">Cancelar</button>
-          <button class="btn-save" (click)="salvarPedido()">Salvar Pedido</button>
+          <button class="btn-save" (click)="salvarPedido()">
+            {{ isEditing ? 'Atualizar Pedido' : 'Salvar Pedido' }}
+          </button>
         </div>
       </div>
     </div>
@@ -74,6 +75,7 @@
             <th>Data</th>
             <th>Status</th>
             <th>Valor (R$)</th>
+            <th>Ações</th>
           </tr>
           </thead>
           <tbody>
@@ -85,9 +87,19 @@
               <span class="badge success">Concluído</span>
             </td>
             <td>R$ {{ order.valor | number:'1.2-2' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon edit" (click)="abrirModalParaEditar(order)" title="Editar">
+                  ✏️
+                </button>
+                <button class="btn-icon delete" (click)="deletarPedido(order.id)" title="Excluir">
+                  🗑️
+                </button>
+              </div>
+            </td>
           </tr>
           <tr *ngIf="orders().length === 0">
-            <td colspan="5" style="text-align: center;">Nenhum pedido encontrado.</td>
+            <td colspan="6" style="text-align: center;">Nenhum pedido encontrado.</td>
           </tr>
           </tbody>
         </table>
