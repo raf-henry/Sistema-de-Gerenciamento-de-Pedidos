@@ -23,7 +23,7 @@ public class Gasto {
     private Double valor;
 
     @Column(nullable = false)
-    private String status; // Ex: "Pago", "Parcelado"
+    private String status = "Pago"; // Valor padrão para registros novos e antigos
 
     private LocalDateTime dataGasto = LocalDateTime.now();
 

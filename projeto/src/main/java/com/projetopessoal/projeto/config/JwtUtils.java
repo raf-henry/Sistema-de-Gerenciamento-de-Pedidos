@@ -16,7 +16,9 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // Use uma chave fixa para que os tokens não invalidem ao reiniciar o servidor
+    private final String SECRET_KEY = "sua_chave_secreta_muito_longa_e_segura_para_desenvolvimento_financeiro";
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     private final long expirationTime = 1000 * 60 * 60 * 10; // 10 horas
 
     public String generateToken(String username) {
@@ -36,7 +38,8 @@ public class JwtUtils {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        // Compara ignorando espaços ou diferenças sutis
+        return (username.trim().equalsIgnoreCase(userDetails.getUsername().trim()) && !isTokenExpired(token));
     }
 
     public String extractUsername(String token) {

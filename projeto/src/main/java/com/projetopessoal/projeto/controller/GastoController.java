@@ -27,23 +27,49 @@ public class GastoController {
     }
 
     private User getAuthenticatedUser(UserDetails userDetails) {
+        if (userDetails == null) {
+            System.err.println("DEBUG ERROR: AuthenticationPrincipal (userDetails) está NULO no Controller.");
+            throw new RuntimeException("Sessão inválida: O Spring Security não identificou o usuário logado.");
+        }
+        System.out.println("DEBUG: Buscando usuário no banco: " + userDetails.getUsername());
         return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> {
+                    System.err.println("DEBUG ERROR: Usuário '" + userDetails.getUsername() + "' existe no Token mas NÃO existe na tabela 'users' do Banco.");
+                    return new RuntimeException("Usuário não encontrado na base de dados. Registre-se novamente.");
+                });
     }
 
     @PostMapping
     public ResponseEntity<?> criarGasto(@RequestBody Map<String, Object> payload, @AuthenticationPrincipal UserDetails userDetails) {
         try {
+            System.out.println("DEBUG: Iniciando criação de gasto para: " + (userDetails != null ? userDetails.getUsername() : "NULO"));
             User user = getAuthenticatedUser(userDetails);
+            
+            String descricao = (String) payload.get("descricao");
+            Object valorObj = payload.get("valor");
+            String status = payload.getOrDefault("status", "Pago").toString();
+
+            if (descricao == null || valorObj == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Campos obrigatórios ausentes: descricao ou valor"));
+            }
+
             Gasto novoGasto = new Gasto();
-            novoGasto.setDescricao((String) payload.get("descricao"));
-            novoGasto.setValor(Double.parseDouble(payload.get("valor").toString()));
+            novoGasto.setDescricao(descricao);
+            novoGasto.setValor(Double.parseDouble(valorObj.toString()));
+            novoGasto.setStatus(status);
             novoGasto.setUsuario(user);
             
             Gasto salvo = gastoRepository.save(novoGasto);
+            System.out.println("DEBUG: Gasto salvo com sucesso. ID: " + salvo.getId());
             return ResponseEntity.ok(salvo);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+            System.err.println("DEBUG CRITICAL ERROR em criarGasto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of(
+                "error", "Falha interna ao salvar gasto",
+                "details", e.getMessage(),
+                "user", userDetails != null ? userDetails.getUsername() : "null"
+            ));
         }
     }
 
@@ -66,6 +92,9 @@ public class GastoController {
                 }
                 if (payload.containsKey("valor")) {
                     gasto.setValor(Double.parseDouble(payload.get("valor").toString()));
+                }
+                if (payload.containsKey("status")) {
+                    gasto.setStatus((String) payload.get("status"));
                 }
                 return ResponseEntity.ok(gastoRepository.save(gasto));
             }).orElse(ResponseEntity.notFound().build());
