@@ -350,6 +350,38 @@ td:nth-child(2) {
   gap: 12px;
 }
 
+.parcelamento-fields {
+  background: var(--pure-white);
+  padding: 20px;
+  border: 1px solid var(--border-lavender);
+  border-radius: 12px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.parcelamento-fields .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.total-preview {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-lavender);
+  font-size: 14px;
+  color: var(--slate-gray);
+  text-align: right;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.total-preview strong {
+  color: var(--expo-black);
+  font-size: 20px;
+  margin-left: 8px;
+  letter-spacing: -0.5px;
+}
+
 .btn-save {
   background-color: var(--expo-black);
   color: var(--pure-white);

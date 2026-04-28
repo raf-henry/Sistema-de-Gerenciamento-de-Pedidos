@@ -57,6 +57,16 @@ public class GastoController {
             novoGasto.setDescricao(descricao);
             novoGasto.setValor(Double.parseDouble(valorObj.toString()));
             novoGasto.setStatus(status);
+            
+            if ("Parcelado".equalsIgnoreCase(status)) {
+                if (payload.containsKey("numeroParcelas")) {
+                    novoGasto.setNumeroParcelas(Integer.parseInt(payload.get("numeroParcelas").toString()));
+                }
+                if (payload.containsKey("valorParcela")) {
+                    novoGasto.setValorParcela(Double.parseDouble(payload.get("valorParcela").toString()));
+                }
+            }
+
             novoGasto.setUsuario(user);
             
             Gasto salvo = gastoRepository.save(novoGasto);
@@ -95,6 +105,12 @@ public class GastoController {
                 }
                 if (payload.containsKey("status")) {
                     gasto.setStatus((String) payload.get("status"));
+                }
+                if (payload.containsKey("numeroParcelas")) {
+                    gasto.setNumeroParcelas(Integer.parseInt(payload.get("numeroParcelas").toString()));
+                }
+                if (payload.containsKey("valorParcela")) {
+                    gasto.setValorParcela(Double.parseDouble(payload.get("valorParcela").toString()));
                 }
                 return ResponseEntity.ok(gastoRepository.save(gasto));
             }).orElse(ResponseEntity.notFound().build());

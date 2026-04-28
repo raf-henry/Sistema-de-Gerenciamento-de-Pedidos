@@ -25,6 +25,9 @@ public class Gasto {
     @Column(nullable = false)
     private String status = "Pago"; // Valor padrão para registros novos e antigos
 
+    private Integer numeroParcelas;
+    private Double valorParcela;
+
     private LocalDateTime dataGasto = LocalDateTime.now();
 
     @ManyToOne

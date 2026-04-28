@@ -32,7 +32,9 @@ export class Home implements OnInit {
   novoGasto = {
     descricao: '',
     valor: 0,
-    status: 'Pago'
+    status: 'Pago',
+    numeroParcelas: 1,
+    valorParcela: 0
   };
 
   ngOnInit() {
@@ -59,7 +61,7 @@ export class Home implements OnInit {
   abrirModalParaNovo() {
     this.isEditing = false;
     this.selectedExpenseId = null;
-    this.novoGasto = { descricao: '', valor: 0, status: 'Pago' };
+    this.novoGasto = { descricao: '', valor: 0, status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
     this.showModal = true;
   }
 
@@ -69,12 +71,22 @@ export class Home implements OnInit {
     this.novoGasto = { 
       descricao: gasto.descricao, 
       valor: gasto.valor,
-      status: gasto.status || 'Pago'
+      status: gasto.status || 'Pago',
+      numeroParcelas: gasto.numeroParcelas || 1,
+      valorParcela: gasto.valorParcela || 0
     };
     this.showModal = true;
   }
 
+  calcularTotal() {
+    if (this.novoGasto.status === 'Parcelado') {
+      this.novoGasto.valor = (this.novoGasto.numeroParcelas || 0) * (this.novoGasto.valorParcela || 0);
+    }
+  }
+
   salvarGasto() {
+    this.calcularTotal();
+    
     if (this.novoGasto.descricao && this.novoGasto.valor > 0) {
       // Capitaliza a primeira letra
       const descricaoFormatada = this.novoGasto.descricao.charAt(0).toUpperCase() + this.novoGasto.descricao.slice(1);
@@ -105,7 +117,7 @@ export class Home implements OnInit {
 
   private finalizarOperacao() {
     this.showModal = false;
-    this.novoGasto = { descricao: '', valor: 0, status: 'Pago' };
+    this.novoGasto = { descricao: '', valor: 0, status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
     this.loadDashboardData();
   }
 

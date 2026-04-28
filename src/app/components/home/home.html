@@ -33,15 +33,30 @@
             <input type="text" [(ngModel)]="novoGasto.descricao" placeholder="Ex: Aluguel, Supermercado">
           </div>
           <div class="form-group">
-            <label>Valor (R$)</label>
-            <input type="number" [(ngModel)]="novoGasto.valor">
-          </div>
-          <div class="form-group">
             <label>Status</label>
             <select [(ngModel)]="novoGasto.status">
               <option value="Pago">Pago</option>
               <option value="Parcelado">Parcelado</option>
             </select>
+          </div>
+
+          <div *ngIf="novoGasto.status === 'Parcelado'" class="parcelamento-fields">
+            <div class="form-group">
+              <label>Número de Parcelas</label>
+              <input type="number" [(ngModel)]="novoGasto.numeroParcelas" (change)="calcularTotal()" min="1">
+            </div>
+            <div class="form-group">
+              <label>Valor da Parcela (R$)</label>
+              <input type="number" [(ngModel)]="novoGasto.valorParcela" (change)="calcularTotal()" placeholder="0.00">
+            </div>
+            <div class="total-preview">
+              Total: <strong>R$ {{ (novoGasto.numeroParcelas || 0) * (novoGasto.valorParcela || 0) | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="novoGasto.status !== 'Parcelado'">
+            <label>Valor (R$)</label>
+            <input type="number" [(ngModel)]="novoGasto.valor">
           </div>
         </div>
         <div class="modal-footer">
@@ -88,7 +103,12 @@
           <tbody>
           <tr *ngFor="let gasto of expenses()">
             <td>#{{ gasto.id }}</td>
-            <td>{{ gasto.descricao }}</td>
+            <td>
+              {{ gasto.descricao }}
+              <small *ngIf="gasto.status === 'Parcelado'" style="display: block; color: var(--slate-gray); font-size: 11px;">
+                {{ gasto.numeroParcelas }}x de R$ {{ gasto.valorParcela | number:'1.2-2' }}
+              </small>
+            </td>
             <td>{{ gasto.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>
               <span class="badge" [ngClass]="{'success': (gasto.status || 'Pago') === 'Pago', 'warning': gasto.status === 'Parcelado'}">
