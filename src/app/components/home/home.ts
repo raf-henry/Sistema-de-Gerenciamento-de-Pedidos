@@ -31,7 +31,8 @@ export class Home implements OnInit {
   
   novoGasto = {
     descricao: '',
-    valor: 0
+    valor: 0,
+    status: 'Pago'
   };
 
   ngOnInit() {
@@ -58,7 +59,7 @@ export class Home implements OnInit {
   abrirModalParaNovo() {
     this.isEditing = false;
     this.selectedExpenseId = null;
-    this.novoGasto = { descricao: '', valor: 0 };
+    this.novoGasto = { descricao: '', valor: 0, status: 'Pago' };
     this.showModal = true;
   }
 
@@ -67,7 +68,8 @@ export class Home implements OnInit {
     this.selectedExpenseId = gasto.id;
     this.novoGasto = { 
       descricao: gasto.descricao, 
-      valor: gasto.valor 
+      valor: gasto.valor,
+      status: gasto.status || 'Pago'
     };
     this.showModal = true;
   }
@@ -103,7 +105,7 @@ export class Home implements OnInit {
 
   private finalizarOperacao() {
     this.showModal = false;
-    this.novoGasto = { descricao: '', valor: 0 };
+    this.novoGasto = { descricao: '', valor: 0, status: 'Pago' };
     this.loadDashboardData();
   }
 

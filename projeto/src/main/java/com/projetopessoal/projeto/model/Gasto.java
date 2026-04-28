@@ -22,6 +22,9 @@ public class Gasto {
     @Column(nullable = false)
     private Double valor;
 
+    @Column(nullable = false)
+    private String status; // Ex: "Pago", "Parcelado"
+
     private LocalDateTime dataGasto = LocalDateTime.now();
 
     @ManyToOne

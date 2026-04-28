@@ -199,6 +199,11 @@ td:nth-child(2) {
   color: #059669;
 }
 
+.badge.warning {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
 /* Action Buttons */
 .action-buttons {
   display: flex;
@@ -315,15 +320,22 @@ td:nth-child(2) {
   display: block;
 }
 
-.modal-body .form-group input {
+.modal-body .form-group input,
+.modal-body .form-group select {
   padding: 16px;
   background-color: var(--cloud-gray);
   border: 1px solid transparent;
   font-weight: 500;
   font-size: 16px;
+  width: 100%;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
 }
 
-.modal-body .form-group input:focus {
+.modal-body .form-group input:focus,
+.modal-body .form-group select:focus {
   background-color: var(--pure-white);
   border-color: var(--expo-black);
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);

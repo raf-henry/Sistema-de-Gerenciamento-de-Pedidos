@@ -36,6 +36,13 @@
             <label>Valor (R$)</label>
             <input type="number" [(ngModel)]="novoGasto.valor">
           </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select [(ngModel)]="novoGasto.status">
+              <option value="Pago">Pago</option>
+              <option value="Parcelado">Parcelado</option>
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" (click)="showModal = false">Cancelar</button>
@@ -84,7 +91,9 @@
             <td>{{ gasto.descricao }}</td>
             <td>{{ gasto.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>
-              <span class="badge success">Pago</span>
+              <span class="badge" [ngClass]="{'success': (gasto.status || 'Pago') === 'Pago', 'warning': gasto.status === 'Parcelado'}">
+                {{ gasto.status || 'Pago' }}
+              </span>
             </td>
             <td>R$ {{ gasto.valor | number:'1.2-2' }}</td>
             <td>
