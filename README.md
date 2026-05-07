@@ -17,11 +17,11 @@ Este é um projeto full-stack para gerenciamento de finanças pessoais. O sistem
 - **PostgreSQL**: Banco de dados relacional.
 
 ## ✨ Principais Funcionalidades
-- **Gestão de Contas Bancárias**: Controle do seu saldo em diferentes instituições financeiras (ex: Nubank, Caixa, PicPay).
-- **Leitor de Extratos via IA**: O sistema processa extratos em PDF utilizando o Gemini, identificando automaticamente entradas, saídas, favorecidos e datas, poupando a digitação manual.
-- **Exportação para Excel**: Geração instantânea de planilhas `.csv` separando corretamente os valores recebidos e pagos.
-- **Dashboard Dinâmico**: Painel interativo com filtros por conta bancária e atualização de saldo em tempo real.
-- **Transações Parceladas**: Registro automático de projeções futuras de gastos através do cálculo de parcelas.
+- **Gestão de Contas Bancárias**: Controle do seu saldo em diferentes instituições financeiras (ex: Nubank, Caixa, PicPay) com isolamento completo de transações por perfil/conta.
+- **Leitor de Extratos via IA**: O sistema processa extratos em PDF utilizando o Gemini, vinculando automaticamente os dados à conta bancária selecionada no momento do upload.
+- **Exportação para Excel**: Geração instantânea de planilhas `.csv` filtradas por conta, separando corretamente os valores recebidos e pagos.
+- **Dashboard Dinâmico**: Painel interativo com filtros reativos por conta bancária, estatísticas isoladas e atualização de saldo em tempo real.
+- **Transações Parceladas**: Registro automático de projeções futuras de gastos através do cálculo de parcelas, integradas ao extrato da conta.
 
 ## 🛠️ Como Executar o Projeto Localmente
 
