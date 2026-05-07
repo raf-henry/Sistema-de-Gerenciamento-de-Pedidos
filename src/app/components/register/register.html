@@ -1,53 +1,55 @@
-<div class="register-container">
-  <div class="register-card">
-    <h2>Criar Conta</h2>
-    <p>Cadastre-se para acessar o sistema</p>
+<div class="min-h-screen bg-background flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-surface-container-lowest rounded-[32px] shadow-2xl border border-outline-variant p-10 space-y-8">
+    <div class="text-center">
+      <div class="inline-flex items-center justify-center p-3 bg-secondary text-on-secondary rounded-2xl mb-4 shadow-lg shadow-secondary/20">
+        <span class="material-symbols-outlined text-3xl">person_add</span>
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight text-on-surface">Criar Conta</h1>
+      <p class="text-on-surface-variant mt-2">Junte-se ao FinanceSys hoje</p>
+    </div>
 
-    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          [(ngModel)]="registerData.email" 
-          required 
-          placeholder="Seu e-mail"
-        >
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="space-y-6">
+      <div class="space-y-2">
+        <label for="email" class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">E-mail</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">mail</span>
+          <input type="email" id="email" name="email" [(ngModel)]="registerData.email" 
+            class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
+            placeholder="Seu melhor e-mail" required>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
-          [(ngModel)]="registerData.password" 
-          required 
-          placeholder="Sua senha"
-        >
+      <div class="space-y-2">
+        <label for="password" class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">Senha</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
+          <input type="password" id="password" name="password" [(ngModel)]="registerData.password" 
+            class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
+            placeholder="Crie uma senha forte" required>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirmar Senha</label>
-        <input 
-          type="password" 
-          id="confirmPassword" 
-          name="confirmPassword" 
-          [(ngModel)]="registerData.confirmPassword" 
-          required 
-          placeholder="Repita sua senha"
-        >
+      <div class="space-y-2">
+        <label for="confirmPassword" class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">Confirmar Senha</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock_reset</span>
+          <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="registerData.confirmPassword" 
+            class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
+            placeholder="Repita sua senha" required>
+        </div>
       </div>
 
-      <button type="submit" class="btn-register" [disabled]="!registerForm.valid">
-        Registrar
+      <button type="submit" [disabled]="!registerForm.valid" 
+        class="w-full py-4 bg-primary text-on-primary rounded-full font-bold shadow-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100">
+        Registrar agora
       </button>
-
-      <div class="form-footer">
-        <span>Já tem uma conta? </span>
-        <a routerLink="/login">Faça Login</a>
-      </div>
     </form>
+
+    <div class="text-center pt-4 border-t border-outline-variant/30">
+      <p class="text-sm text-on-surface-variant">
+        Já tem uma conta? 
+        <a routerLink="/login" class="font-bold text-primary hover:underline">Faça Login</a>
+      </p>
+    </div>
   </div>
 </div>

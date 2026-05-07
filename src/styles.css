@@ -1,44 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+@import "tailwindcss";
 
-:root {
-  /* Colors from DESING.md */
-  --expo-black: #000000;
-  --near-black: #1c2024;
-  --link-cobalt: #0d74ce;
-  --cloud-gray: #f0f0f3;
-  --pure-white: #ffffff;
-  --slate-gray: #60646c;
-  --border-lavender: #e0e1e6;
-  --input-border: #d9d9e0;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@theme {
+  --font-manrope: "Manrope", sans-serif;
   
-  /* Spacing */
-  --base-unit: 8px;
+  /* Cores Design System Stitch */
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1c1b1b;
+  --color-on-primary-container: #858383;
+  
+  --color-secondary: #006c49;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #6cf8bb;
+  --color-on-secondary-container: #00714d;
+  
+  --color-tertiary: #000000;
+  --color-tertiary-container: #410004;
+  --color-on-tertiary-container: #ef4444;
+  
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --color-background: #f9f9ff;
+  --color-on-background: #151c27;
+  
+  --color-surface: #f9f9ff;
+  --color-on-surface: #151c27;
+  --color-surface-variant: #dce2f3;
+  --color-on-surface-variant: #444748;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-container: #e7eefe;
+  --color-surface-container-high: #e2e8f8;
+  --color-surface-container-highest: #dce2f3;
+  
+  --color-outline: #747878;
+  --color-outline-variant: #c4c7c7;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, system-ui, sans-serif;
-  background-color: var(--cloud-gray);
-  color: var(--near-black);
+@layer base {
+  body {
+    @apply bg-background text-on-background antialiased;
+    font-family: "Manrope", sans-serif;
+  }
+}
+
+/* Material Symbols - Suporte Global */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--expo-black);
-  letter-spacing: -0.02em;
+/* Scrollbar Customizada Premium */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-a {
-  color: var(--link-cobalt);
-  text-decoration: none;
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
 }
 
-a:hover {
-  text-decoration: underline;
-}
-
-button {
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
+::-webkit-scrollbar-thumb {
+  @apply bg-outline-variant/30 rounded-full hover:bg-outline-variant/50;
 }

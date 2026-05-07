@@ -30,6 +30,19 @@ public class Gasto {
 
     private LocalDateTime dataGasto = LocalDateTime.now();
 
+    // Novos campos baseados no extrato da Caixa
+    @Column(nullable = false)
+    private String tipo = "DESPESA"; // "RECEITA" ou "DESPESA"
+
+    private String nrDoc;
+    private String favorecido;
+    private String cpfCnpj;
+    private Double saldo;
+
+    @ManyToOne
+    @JoinColumn(name = "conta_id")
+    private Conta conta;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User usuario;

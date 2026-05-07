@@ -28,4 +28,11 @@ export class ExpenseService {
   getKpis(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/stats`);
   }
+
+  uploadExtrato(file: File, contaId: string): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('contaId', contaId);
+    return this.http.post<any>(`${this.API_URL}/importar-caixa`, formData);
+  }
 }

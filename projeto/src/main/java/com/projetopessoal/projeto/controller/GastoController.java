@@ -4,27 +4,40 @@ import com.projetopessoal.projeto.model.Gasto;
 import com.projetopessoal.projeto.model.User;
 import com.projetopessoal.projeto.repository.GastoRepository;
 import com.projetopessoal.projeto.repository.UserRepository;
+import com.projetopessoal.projeto.repository.ContaRepository;
+import com.projetopessoal.projeto.model.Conta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import com.projetopessoal.projeto.service.GeminiService;
 
 @RestController
 @RequestMapping("/api/gastos")
 @CrossOrigin(origins = "http://localhost:4200")
 public class GastoController {
 
-    private final GastoRepository gastoRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private GastoRepository gastoRepository;
 
-    public GastoController(GastoRepository gastoRepository, UserRepository userRepository) {
-        this.gastoRepository = gastoRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private ContaRepository contaRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private GeminiService geminiService;
+
+    // Construtor padrão para o Spring
+    public GastoController() {}
 
     private User getAuthenticatedUser(UserDetails userDetails) {
         if (userDetails == null) {
@@ -57,6 +70,7 @@ public class GastoController {
             novoGasto.setDescricao(descricao);
             novoGasto.setValor(Double.parseDouble(valorObj.toString()));
             novoGasto.setStatus(status);
+            novoGasto.setTipo(payload.getOrDefault("tipo", "DESPESA").toString());
             
             if ("Parcelado".equalsIgnoreCase(status)) {
                 if (payload.containsKey("numeroParcelas")) {
@@ -83,6 +97,81 @@ public class GastoController {
         }
     }
 
+    @PostMapping("/importar-caixa")
+    public ResponseEntity<?> importarExtratoCaixa(
+            @RequestParam("file") MultipartFile file, 
+            @RequestParam("contaId") Long contaId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            User user = getAuthenticatedUser(userDetails);
+            Conta conta = contaRepository.findById(contaId)
+                    .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Arquivo vazio."));
+            }
+
+            // Envia o PDF para o GeminiService
+            List<Map<String, Object>> gastosExtraidos = geminiService.processarExtratoCaixa(file.getBytes());
+            int salvos = 0;
+
+            for (Map<String, Object> dado : gastosExtraidos) {
+                Gasto novoGasto = new Gasto();
+                novoGasto.setUsuario(user);
+                novoGasto.setConta(conta);
+                novoGasto.setDescricao((String) dado.get("descricao"));
+                
+                if (dado.containsKey("tipo")) {
+                    novoGasto.setTipo((String) dado.get("tipo"));
+                }
+                if (dado.containsKey("nrDoc")) {
+                    novoGasto.setNrDoc((String) dado.get("nrDoc"));
+                }
+                if (dado.containsKey("favorecido")) {
+                    novoGasto.setFavorecido((String) dado.get("favorecido"));
+                }
+                if (dado.containsKey("cpfCnpj")) {
+                    novoGasto.setCpfCnpj((String) dado.get("cpfCnpj"));
+                }
+                if (dado.containsKey("saldo") && dado.get("saldo") != null) {
+                    try {
+                        novoGasto.setSaldo(Double.parseDouble(dado.get("saldo").toString()));
+                    } catch (Exception ignored) {}
+                }
+                
+                // Converte o valor de forma segura
+                Object valorObj = dado.get("valor");
+                if (valorObj instanceof Number) {
+                    novoGasto.setValor(((Number) valorObj).doubleValue());
+                } else if (valorObj instanceof String) {
+                    novoGasto.setValor(Double.parseDouble(valorObj.toString().replace(",", ".")));
+                }
+
+                // Trata a data (espera ISO-8601)
+                if (dado.containsKey("dataGasto") && dado.get("dataGasto") != null) {
+                    try {
+                        novoGasto.setDataGasto(LocalDateTime.parse(dado.get("dataGasto").toString()));
+                    } catch (Exception e) {
+                        novoGasto.setDataGasto(LocalDateTime.now());
+                    }
+                } else {
+                    novoGasto.setDataGasto(LocalDateTime.now());
+                }
+
+                novoGasto.setStatus("Pago"); // Extrato de conta sempre indica que já foi pago
+                gastoRepository.save(novoGasto);
+                salvos++;
+            }
+
+            return ResponseEntity.ok(Map.of("message", "Extrato processado com sucesso!", "lidos", salvos));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Falha ao processar o extrato: " + e.getMessage()));
+        }
+    }
+
+
     @GetMapping
     public ResponseEntity<List<Gasto>> getGastos(@AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
@@ -105,6 +194,9 @@ public class GastoController {
                 }
                 if (payload.containsKey("status")) {
                     gasto.setStatus((String) payload.get("status"));
+                }
+                if (payload.containsKey("tipo")) {
+                    gasto.setTipo((String) payload.get("tipo"));
                 }
                 if (payload.containsKey("numeroParcelas")) {
                     gasto.setNumeroParcelas(Integer.parseInt(payload.get("numeroParcelas").toString()));
