@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface GastoRepository extends JpaRepository<Gasto, Long> {
     List<Gasto> findByUsuario(User usuario);
+    List<Gasto> findByUsuarioAndConta(User usuario, com.projetopessoal.projeto.model.Conta conta);
 }

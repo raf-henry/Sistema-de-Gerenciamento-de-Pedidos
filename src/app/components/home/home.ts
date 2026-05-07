@@ -73,12 +73,12 @@ export class Home implements OnInit {
   }
 
   loadDashboardData() {
-    this.expenseService.getExpenses().subscribe({
+    this.expenseService.getExpenses(this.contaSelecionadaId).subscribe({
       next: (data) => this.expenses.set(data),
       error: (err) => console.error('Erro ao buscar gastos', err)
     });
 
-    this.expenseService.getKpis().subscribe({
+    this.expenseService.getKpis(this.contaSelecionadaId).subscribe({
       next: (data) => {
         this.stats.set({
           totalGastos: data.totalGastos,
@@ -88,6 +88,10 @@ export class Home implements OnInit {
       },
       error: (err) => console.error('Erro ao buscar estatísticas', err)
     });
+  }
+
+  onContaChange() {
+    this.loadDashboardData();
   }
 
   abrirModalParaNovo() {
@@ -121,9 +125,12 @@ export class Home implements OnInit {
     this.calcularTotal();
     
     if (this.novoGasto.descricao && this.novoGasto.valor > 0) {
-      // Capitaliza a primeira letra
       const descricaoFormatada = this.novoGasto.descricao.charAt(0).toUpperCase() + this.novoGasto.descricao.slice(1);
-      const gastoParaSalvar = { ...this.novoGasto, descricao: descricaoFormatada };
+      const gastoParaSalvar: any = { ...this.novoGasto, descricao: descricaoFormatada };
+      
+      if (this.contaSelecionadaId) {
+        gastoParaSalvar.contaId = this.contaSelecionadaId;
+      }
 
       if (this.isEditing && this.selectedExpenseId) {
         this.expenseService.updateExpense(this.selectedExpenseId, gastoParaSalvar).subscribe({

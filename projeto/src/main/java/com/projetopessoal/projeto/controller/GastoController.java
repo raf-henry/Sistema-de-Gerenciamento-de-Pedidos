@@ -81,6 +81,12 @@ public class GastoController {
                 }
             }
 
+            if (payload.containsKey("contaId") && payload.get("contaId") != null) {
+                Long contaId = Long.parseLong(payload.get("contaId").toString());
+                Conta conta = contaRepository.findById(contaId).orElse(null);
+                novoGasto.setConta(conta);
+            }
+
             novoGasto.setUsuario(user);
             
             Gasto salvo = gastoRepository.save(novoGasto);
@@ -173,8 +179,12 @@ public class GastoController {
 
 
     @GetMapping
-    public ResponseEntity<List<Gasto>> getGastos(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<Gasto>> getGastos(@RequestParam(required = false) Long contaId, @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
+        if (contaId != null) {
+            Conta conta = contaRepository.findById(contaId).orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+            return ResponseEntity.ok(gastoRepository.findByUsuarioAndConta(user, conta));
+        }
         return ResponseEntity.ok(gastoRepository.findByUsuario(user));
     }
 
@@ -229,9 +239,15 @@ public class GastoController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<?> getStats(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getStats(@RequestParam(required = false) Long contaId, @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
-        List<Gasto> gastos = gastoRepository.findByUsuario(user);
+        List<Gasto> gastos;
+        if (contaId != null) {
+            Conta conta = contaRepository.findById(contaId).orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+            gastos = gastoRepository.findByUsuarioAndConta(user, conta);
+        } else {
+            gastos = gastoRepository.findByUsuario(user);
+        }
         
         long totalGastos = gastos.size();
         double valorTotal = gastos.stream().mapToDouble(Gasto::getValor).sum();

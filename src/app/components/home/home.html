@@ -120,8 +120,8 @@
               <span>Exportar Excel</span>
             </button>
             <div class="flex items-center gap-2">
-              <select [(ngModel)]="contaSelecionadaId" class="bg-surface-container-low border border-outline-variant text-on-surface text-sm rounded-lg px-3 py-2 outline-none focus:border-primary transition-all">
-                <option [value]="null" disabled>Selecione uma conta</option>
+              <select [(ngModel)]="contaSelecionadaId" (change)="onContaChange()" class="bg-surface-container-low border border-outline-variant text-on-surface text-sm rounded-lg px-3 py-2 outline-none focus:border-primary transition-all">
+                <option [value]="null">Todas as Contas</option>
                 <option *ngFor="let conta of contas()" [value]="conta.id">
                   {{ conta.nome }} ({{ conta.banco }})
                 </option>

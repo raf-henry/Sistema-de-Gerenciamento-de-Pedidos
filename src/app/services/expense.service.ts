@@ -9,15 +9,16 @@ export class ExpenseService {
   private http = inject(HttpClient);
   private readonly API_URL = 'http://localhost:8081/api/gastos';
 
-  getExpenses(): Observable<any[]> {
-    return this.http.get<any[]>(this.API_URL);
+  getExpenses(contaId?: number | null): Observable<any[]> {
+    const url = contaId ? `${this.API_URL}?contaId=${contaId}` : this.API_URL;
+    return this.http.get<any[]>(url);
   }
 
-  createExpense(expense: { descricao: string, valor: number }): Observable<any> {
+  createExpense(expense: { descricao: string, valor: number, contaId?: number }): Observable<any> {
     return this.http.post<any>(this.API_URL, expense);
   }
 
-  updateExpense(id: number, expense: { descricao: string, valor: number }): Observable<any> {
+  updateExpense(id: number, expense: { descricao: string, valor: number, contaId?: number }): Observable<any> {
     return this.http.put<any>(`${this.API_URL}/${id}`, expense);
   }
 
@@ -25,8 +26,9 @@ export class ExpenseService {
     return this.http.delete<any>(`${this.API_URL}/${id}`);
   }
 
-  getKpis(): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/stats`);
+  getKpis(contaId?: number | null): Observable<any> {
+    const url = contaId ? `${this.API_URL}/stats?contaId=${contaId}` : `${this.API_URL}/stats`;
+    return this.http.get<any>(url);
   }
 
   uploadExtrato(file: File, contaId: string): Observable<any> {
