@@ -1,5 +1,13 @@
 # FinanceSys - Controle de Finanças Pessoais Inteligente
 
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
+
 Este é um projeto full-stack para gerenciamento de finanças pessoais. O sistema foi projetado com uma arquitetura moderna e segura, oferecendo controle detalhado de receitas e despesas, leitura inteligente de extratos bancários via Inteligência Artificial e uma interface fluida.
 
 ## 🚀 Tecnologias Utilizadas
