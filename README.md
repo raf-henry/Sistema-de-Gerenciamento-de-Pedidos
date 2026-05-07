@@ -50,4 +50,4 @@ Este é um projeto full-stack para gerenciamento de finanças pessoais. O sistem
    * O Backend rodará internamente em: `http://localhost:8081`
 
 ---
-© 2026 FinanceSys Team. Todos os direitos reservados.
+© 2026 FinanceSys. Todos os direitos reservados.
