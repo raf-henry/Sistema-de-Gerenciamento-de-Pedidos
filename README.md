@@ -1,37 +1,53 @@
-# FinanceSys - Controle de Gastos
+# FinanceSys - Controle de Finanças Pessoais Inteligente
 
-Este é um projeto full-stack pessoal para gerenciamento de finanças pessoais. O sistema foi projetado com uma arquitetura moderna e segura, oferecendo controle detalhado de despesas simples e parceladas.
+Este é um projeto full-stack para gerenciamento de finanças pessoais. O sistema foi projetado com uma arquitetura moderna e segura, oferecendo controle detalhado de receitas e despesas, leitura inteligente de extratos bancários via Inteligência Artificial e uma interface fluida.
 
 ## 🚀 Tecnologias Utilizadas
 
 ### Frontend
-- **Angular**: Framework SPA para a interface.
-- **Design System**: Estilo premium baseado no ecossistema Expo (Pill-shaped, Inter font, Glassmorphism).
-- **Segurança**: Autenticação via **JWT (JSON Web Token)** com interceptores de requisição.
+- **Angular**: Framework SPA para a interface usando Signals para reatividade de estado.
+- **Tailwind CSS**: Estilização utilitária e componentes visuais premium (Glassmorphism e transições fluidas).
+- **Design System**: UI responsiva com navegação persistente e barra lateral animada.
+- **Segurança**: Autenticação via **JWT (JSON Web Token)** com interceptores HTTP.
 
 ### Backend
-- **Spring Boot 3+**: Framework Java para a API REST.
-- **Spring Security**: Proteção de endpoints e autenticação sem estado (Stateless).
-- **JJWT**: Biblioteca para geração e validação de tokens JWT.
-- **PostgreSQL**: Banco de dados relacional para persistência robusta.
+- **Spring Boot 3+**: API REST robusta construída em Java.
+- **Spring Security**: Proteção de endpoints e sessões Stateless.
+- **Integração IA (Gemini)**: Comunicação direta com a API Google Gemini para interpretação autônoma de PDFs.
+- **PostgreSQL**: Banco de dados relacional.
 
-## 🛡️ Diferenciais de Segurança
-- **Autenticação JWT**: Sessões seguras e eficientes, sem necessidade de enviar credenciais em cada requisição.
-- **Isolamento de Dados**: Arquitetura multi-usuário onde cada registro é vinculado a um ID único, garantindo total privacidade.
-- **CORS & CSRF**: Configurações de segurança ajustadas para comunicação exclusiva entre frontend e backend.
+## ✨ Principais Funcionalidades
+- **Gestão de Contas Bancárias**: Controle do seu saldo em diferentes instituições financeiras (ex: Nubank, Caixa, PicPay).
+- **Leitor de Extratos via IA**: O sistema processa extratos em PDF utilizando o Gemini, identificando automaticamente entradas, saídas, favorecidos e datas, poupando a digitação manual.
+- **Exportação para Excel**: Geração instantânea de planilhas `.csv` separando corretamente os valores recebidos e pagos.
+- **Dashboard Dinâmico**: Painel interativo com filtros por conta bancária e atualização de saldo em tempo real.
+- **Transações Parceladas**: Registro automático de projeções futuras de gastos através do cálculo de parcelas.
 
-## ✨ Novas Funcionalidades
-- **Gestão de Parcelamentos**: Opção de registrar gastos parcelados com cálculo automático do valor total.
-- **Gasto Fixo Mensal**: KPI dinâmico que soma o valor das parcelas atuais para planejamento financeiro.
-- **Dashboard Inteligente**: Indicadores em tempo real sobre o fluxo de caixa e total de lançamentos.
-- **Status de Despesa**: Identificação visual rápida entre gastos "Pagos" e "Parcelados" com badges coloridos.
+## 🛠️ Como Executar o Projeto Localmente
 
-## 🛠️ Como Executar o Projeto
+1. **Dependências Frontend**: 
+   Abra o terminal na raiz do projeto e instale os pacotes necessários:
+   ```bash
+   npm install
+   ```
 
-1. **Instalação**: Execute `npm install` na raiz do projeto.
-2. **Banco de Dados**: Certifique-se de que o PostgreSQL está rodando e a database `Projeto01` foi criada.
-3. **Segurança (Senha)**: Crie um arquivo chamado `.env` na raiz do projeto e adicione sua senha: `DB_PASSWORD=sua_senha_aqui`.
-4. **Execução**: Execute `npm run dev`. Isso iniciará o Frontend (Angular) e o Backend (Spring Boot) simultaneamente.
+2. **Banco de Dados**: 
+   Certifique-se de que o **PostgreSQL** está em execução na porta `5432` com o usuário `postgres` e que a database `Projeto01` foi previamente criada.
+
+3. **Configuração das Variáveis (.env)**: 
+   Crie um arquivo chamado `.env` na raiz do projeto e configure suas credenciais locais e de nuvem:
+   ```env
+   DB_PASSWORD=sua_senha_do_postgres_aqui
+   GEMINI_API_KEY=sua_chave_de_api_do_google_gemini_aqui
+   ```
+
+4. **Iniciando a Aplicação**: 
+   Execute o script de desenvolvimento que compila o frontend e o backend simultaneamente:
+   ```bash
+   npm run dev
+   ```
+   * O Frontend estará acessível em: `http://localhost:4200`
+   * O Backend rodará internamente em: `http://localhost:8081`
 
 ---
 © 2026 FinanceSys Team. Todos os direitos reservados.
