@@ -48,7 +48,7 @@ O FinanceSys utiliza o que há de mais moderno em desenvolvimento de software:
 - **Frontend:** Angular 19 + Tailwind CSS (Hospedado na **Vercel**).
 - **Backend:** Spring Boot 3 + Java 21 (Containerizado no **Render**).
 - **Banco de Dados:** PostgreSQL Gerenciado (Neon.tech).
-- **Segurança:** Autenticação JWT, Proteção IDOR e Criptografia Resend API para verificação de e-mail.
+- **Segurança:** Autenticação JWT, Proteção IDOR e Criptografia para proteção de dados.
 
 ---
 
