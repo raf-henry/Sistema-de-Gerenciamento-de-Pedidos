@@ -134,17 +134,17 @@
 
             <form class="space-y-3 flex-1 flex flex-col">
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="current-password">Senha Atual</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="current-password">Senha Atual</label>
                 <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="current-password" placeholder="••••••••" type="password" [(ngModel)]="currentPasswordForPw" name="currentPasswordForPw"/>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="new-password">Nova Senha</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="new-password">Nova Senha</label>
                 <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="new-password" placeholder="Nova senha segura" type="password" [(ngModel)]="newPassword" name="newPassword"/>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="confirm-password">Confirmar Nova Senha</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="confirm-password">Confirmar Nova Senha</label>
                 <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="confirm-password" placeholder="Repita a nova senha" type="password" [(ngModel)]="confirmPassword" name="confirmPassword"/>
               </div>
@@ -176,7 +176,7 @@
 
             <form class="space-y-3 flex-1 flex flex-col">
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="current-email-display">Email Atual</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="current-email-display">Email Atual</label>
                 <div class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface-variant/50 flex items-center text-base text-on-surface-variant cursor-not-allowed">
                   {{ userName }}
                 </div>
@@ -184,13 +184,13 @@
               
               <!-- Added Current Password field for security verification (Required by Backend) -->
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="email-current-password">Senha Atual</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="email-current-password">Senha Atual</label>
                 <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="email-current-password" placeholder="Confirme sua identidade" type="password" [(ngModel)]="currentPasswordForEmail" name="currentPasswordForEmail"/>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="new-email">Novo Email</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="new-email">Novo Email</label>
                 <div class="relative">
                   <input class="w-full h-12 px-4 rounded-full border bg-surface outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50 pr-10" 
                          [ngClass]="emailError() ? 'border-error focus:border-error focus:ring-1 focus:ring-error text-error' : 'border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary'"
@@ -205,7 +205,7 @@
               </div>
               
               <div>
-                <label class="block text-sm font-semibold text-on-surface mb-1" for="confirm-email">Confirmar Novo Email</label>
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="confirm-email">Confirmar Novo Email</label>
                 <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="confirm-email" placeholder="Repita o novo email" type="email" [(ngModel)]="confirmEmail" name="confirmEmail"/>
               </div>
