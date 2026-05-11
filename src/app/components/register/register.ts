@@ -18,6 +18,7 @@ export class Register {
   isModalOpen = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
+  demoCode = signal('');
 
   registerData = {
     email: '',
@@ -50,11 +51,15 @@ export class Register {
     
     this.isLoading.set(true);
     this.errorMessage.set('');
+    this.demoCode.set('');
     console.log('Enviando código para:', this.registerData.email);
     
     this.authService.sendVerificationCode(this.registerData.email).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         console.log('Sucesso ao enviar código:', res);
+        if (res.demoCode) {
+          this.demoCode.set(res.demoCode);
+        }
         this.isModalOpen.set(true);
         this.isLoading.set(false);
       },

@@ -57,8 +57,11 @@ public class AuthController {
         if (userRepository.findByUsername(email).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Usuário já existe."));
         }
-        verificationService.generateAndSendCode(email);
-        return ResponseEntity.ok(Map.of("message", "Código enviado com sucesso!"));
+        String code = verificationService.generateAndSendCode(email);
+        return ResponseEntity.ok(Map.of(
+            "message", "Código gerado com sucesso!",
+            "demoCode", code
+        ));
     }
 
     @PostMapping("/register")

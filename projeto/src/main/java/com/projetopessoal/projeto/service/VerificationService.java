@@ -22,15 +22,17 @@ public class VerificationService {
         this.emailService = emailService;
     }
 
-    public void generateAndSendCode(String email) {
+    public String generateAndSendCode(String email) {
         // Gera um código de 6 dígitos com SecureRandom
         String code = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
         
         // Armazena com timestamp de criação e contador de tentativas
         verificationCodes.put(email, new CodeEntry(code, Instant.now(), 0));
 
-        // Envia o e-mail
+        // Envia o e-mail (agora apenas loga no console)
         emailService.sendVerificationCode(email, code);
+        
+        return code;
     }
 
     public boolean verifyCode(String email, String code) {

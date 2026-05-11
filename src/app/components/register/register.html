@@ -85,6 +85,16 @@
             Insira o código de 6 dígitos enviado para <br>
             <span class="font-bold text-on-surface">{{ registerData.email }}</span>
           </p>
+
+          @if (demoCode()) {
+            <div class="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-2xl animate-fade-up">
+              <p class="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Modo de Demonstração</p>
+              <p class="text-sm text-on-surface-variant">
+                Para fins de teste, utilize o código abaixo para validar seu acesso:
+              </p>
+              <p class="text-2xl font-black text-primary mt-1 tracking-widest">{{ demoCode() }}</p>
+            </div>
+          }
         </div>
 
         @if (errorMessage()) {
