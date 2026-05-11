@@ -101,6 +101,11 @@ public class GastoController {
             Conta conta = contaRepository.findById(contaId)
                     .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
+            // Verifica se a conta pertence ao usuário autenticado (previne IDOR)
+            if (!conta.getUsuario().getId().equals(user.getId())) {
+                return ResponseEntity.status(403).body(Map.of("error", "Acesso negado a esta conta."));
+            }
+
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Arquivo vazio."));
             }
@@ -183,10 +188,14 @@ public class GastoController {
 
 
     @GetMapping
-    public ResponseEntity<List<Gasto>> getGastos(@RequestParam(required = false) Long contaId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getGastos(@RequestParam(required = false) Long contaId, @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
         if (contaId != null) {
             Conta conta = contaRepository.findById(contaId).orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+            // Verifica se a conta pertence ao usuário autenticado (previne IDOR)
+            if (!conta.getUsuario().getId().equals(user.getId())) {
+                return ResponseEntity.status(403).body(Map.of("error", "Acesso negado a esta conta."));
+            }
             return ResponseEntity.ok(gastoRepository.findByUsuarioAndConta(user, conta));
         }
         return ResponseEntity.ok(gastoRepository.findByUsuario(user));
@@ -221,7 +230,7 @@ public class GastoController {
                 return ResponseEntity.ok(gastoRepository.save(gasto));
             }).orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("error", "Falha ao atualizar transação."));
         }
     }
 
@@ -238,7 +247,7 @@ public class GastoController {
                 return ResponseEntity.ok(Map.of("message", "Gasto removido com sucesso"));
             }).orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.internalServerError().body(Map.of("error", "Falha ao remover transação."));
         }
     }
 
@@ -248,6 +257,10 @@ public class GastoController {
         List<Gasto> gastos;
         if (contaId != null) {
             Conta conta = contaRepository.findById(contaId).orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+            // Verifica se a conta pertence ao usuário autenticado (previne IDOR)
+            if (!conta.getUsuario().getId().equals(user.getId())) {
+                return ResponseEntity.status(403).body(Map.of("error", "Acesso negado a esta conta."));
+            }
             gastos = gastoRepository.findByUsuarioAndConta(user, conta);
         } else {
             gastos = gastoRepository.findByUsuario(user);

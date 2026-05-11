@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface Conta {
   id?: number;
@@ -16,7 +17,7 @@ export interface Conta {
   providedIn: 'root'
 })
 export class ContaService {
-  private apiUrl = 'http://localhost:8081/api/contas';
+  private apiUrl = `${environment.apiUrl}/api/contas`;
   
   // Signal para manter as contas sincronizadas em toda a aplicação
   contas = signal<Conta[]>([]);

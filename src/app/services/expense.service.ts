@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'http://localhost:8081/api/gastos';
+  private readonly API_URL = `${environment.apiUrl}/api/gastos`;
 
   getExpenses(contaId?: number | null): Observable<any[]> {
     const url = contaId ? `${this.API_URL}?contaId=${contaId}` : this.API_URL;
