@@ -2,10 +2,10 @@
 
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
 
-FinanceSys é uma plataforma inteligente de controle de gastos que une a robustez do ecossistema Java com a agilidade do Angular. O grande diferencial está na **integração com IA**, permitindo que você gerencie suas finanças apenas fazendo o upload dos seus extratos bancários.
+O **FinanceSys** é uma plataforma de gestão financeira de alto nível que combina a robustez do ecossistema Java com a modernidade do Angular. Projetado com uma estética **Premium SaaS**, o sistema oferece uma experiência fluida, responsiva e inteligente para o controle total das suas finanças.
 
 ---
 
@@ -15,39 +15,45 @@ A aplicação está disponível e pronta para uso em:
 
 ---
 
-## 📖 Como Utilizar a Aplicação
+## 🔥 Diferenciais e Funcionalidades
 
-### 1. Criar sua Conta
-- Acesse a página de **Cadastro**.
-- Insira seu e-mail e defina uma senha segura.
-- **Verificação:** Você receberá um código de segurança em seu e-mail (via Resend API) para validar seu acesso.
+### 🧠 Importação Inteligente com IA
+Esqueça a digitação manual. Faça o upload do seu **extrato bancário em PDF** e deixe que a **IA Google Gemini** processe tudo para você. O sistema identifica automaticamente:
+- Datas e categorias de gastos.
+- Descrições e favorecidos.
+- Valores e tipos de transação (Entrada/Saída).
 
-### 2. Configurar suas Contas
-- No dashboard, adicione as instituições financeiras que você utiliza (ex: Nubank, Itaú, Banco do Brasil).
-- Cada conta possui um saldo isolado e histórico próprio.
+### 📱 Interface Ultra-Responsiva
+O sistema foi reconstruído com foco em **Mobile-First**.
+- **Sidebar Retrátil**: Navegação inteligente que se adapta ao tamanho da tela.
+- **Dashboards Adaptáveis**: Gráficos e cards que se reorganizam dinamicamente.
+- **UX Premium**: Micro-interações, animações de entrada e feedbacks visuais instantâneos.
 
-### 3. Importação Inteligente (IA)
-- Não perca tempo digitando gasto por gasto. 
-- Vá na seção de transações e faça o **Upload de um Extrato em PDF**.
-- O sistema utiliza a **IA Google Gemini** para ler o documento, identificar datas, descrições e valores, e cadastrar tudo automaticamente na conta selecionada.
+### 💰 Gestão de Patrimônio Consolidado
+Uma visão 360º do seu dinheiro:
+- **Contas Bancárias**: Gerencie múltiplas instituições (Nubank, Itaú, Caixa, etc.) em um só lugar.
+- **Saldo Global**: Acompanhe seu patrimônio líquido total atualizado em tempo real.
+- **Categorização Automática**: Saiba exatamente para onde seu dinheiro está indo.
 
-### 4. Análise e Gestão
-- Visualize seus gastos e entradas através de gráficos e estatísticas.
-- Exporte seus dados para planilhas sempre que precisar.
+### 📊 Exportação e Relatórios
+- Gere planilhas **Excel** detalhadas dos seus gastos com um clique.
+- Acompanhe métricas de **Gasto Fixo Mensal** e fluxo de caixa.
 
 ---
 
-## ✨ Tecnologias que tornam isso possível
-O FinanceSys utiliza uma arquitetura de nuvem moderna para garantir 100% de disponibilidade:
-- **Frontend:** Angular 19 hospedado na **Vercel**.
-- **Backend:** Spring Boot 3 rodando em containers no **Render**.
-- **Banco de Dados:** PostgreSQL Gerenciado via **Neon.tech**.
-- **Segurança:** Autenticação JWT e proteção total contra acesso não autorizado (IDOR Protection).
+## 🛠️ Stack Tecnológica
+
+O FinanceSys utiliza o que há de mais moderno em desenvolvimento de software:
+
+- **Frontend:** Angular 19 + Tailwind CSS (Hospedado na **Vercel**).
+- **Backend:** Spring Boot 3 + Java 21 (Containerizado no **Render**).
+- **Banco de Dados:** PostgreSQL Gerenciado (Neon.tech).
+- **Segurança:** Autenticação JWT, Proteção IDOR e Criptografia Resend API para verificação de e-mail.
 
 ---
 
 ## 🛡️ Privacidade e Segurança
-Seus dados são protegidos por criptografia de ponta a ponta. O sistema foi auditado para garantir que um usuário nunca tenha acesso aos dados financeiros de outro, mantendo total privacidade e integridade das informações.
+A segurança é nossa prioridade. Utilizamos criptografia de ponta a ponta e auditorias de acesso para garantir que seus dados financeiros sejam estritamente privados e inacessíveis por terceiros.
 
 ---
-© 2026 FinanceSys. Transformando a gestão financeira com Inteligência Artificial.
+© 2026 FinanceSys. Transformando a gestão financeira com tecnologia de ponta.
