@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +17,21 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    // Use uma chave fixa para que os tokens não invalidem ao reiniciar o servidor
-    private final String SECRET_KEY = "sua_chave_secreta_muito_longa_e_segura_para_desenvolvimento_financeiro";
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final Key key;
     private final long expirationTime = 1000 * 60 * 60 * 10; // 10 horas
+
+    public JwtUtils(@Value("${JWT_SECRET:chave_padrao_somente_para_dev_trocar_em_producao_obrigatoriamente}") String secretKey) {
+        // Garante que a chave tem pelo menos 256 bits (32 bytes) para HMAC-SHA256
+        byte[] keyBytes = secretKey.getBytes();
+        if (keyBytes.length < 32) {
+            // Pad com zeros se necessário (fallback para dev)
+            byte[] paddedKey = new byte[32];
+            System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 32));
+            this.key = Keys.hmacShaKeyFor(paddedKey);
+        } else {
+            this.key = Keys.hmacShaKeyFor(keyBytes);
+        }
+    }
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
@@ -38,8 +50,8 @@ public class JwtUtils {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        // Compara ignorando espaços ou diferenças sutis
-        return (username.trim().equalsIgnoreCase(userDetails.getUsername().trim()) && !isTokenExpired(token));
+        // Comparação case-sensitive e sem espaços extras para evitar bypass
+        return (username.trim().equals(userDetails.getUsername().trim()) && !isTokenExpired(token));
     }
 
     public String extractUsername(String token) {

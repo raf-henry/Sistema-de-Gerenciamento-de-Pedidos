@@ -38,9 +38,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtUtils.extractUsername(jwt);
-                System.out.println("DEBUG: Token recebido para o usuário: " + username);
             } catch (Exception e) {
-                System.err.println("DEBUG ERROR: Falha ao extrair username do token: " + e.getMessage());
+                // Token inválido ou malformado - silenciosamente ignorado
             }
         }
 
@@ -48,18 +47,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtUtils.validateToken(jwt, userDetails)) {
-                System.out.println("DEBUG: Token validado com sucesso para: " + username);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } else {
-                System.err.println("DEBUG ERROR: Token inválido para o usuário: " + username);
             }
-        } else if (username == null && authorizationHeader != null) {
-            System.err.println("DEBUG ERROR: Authorization header presente mas username não extraído.");
         }
+        
         chain.doFilter(request, response);
     }
 }

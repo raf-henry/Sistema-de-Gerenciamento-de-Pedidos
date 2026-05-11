@@ -25,7 +25,18 @@ export class AuthService {
     localStorage.removeItem('username');
   }
 
-  register(userData: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/register`, userData);
+  register(userData: {email: string, password: string, code: string}): Observable<any> {
+    return this.http.post(`${this.API_URL}/register`, userData).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('username', response.username || userData.email);
+        }
+      })
+    );
+  }
+
+  sendVerificationCode(email: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/send-code`, { email });
   }
 }

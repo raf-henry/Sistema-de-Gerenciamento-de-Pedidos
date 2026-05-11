@@ -45,7 +45,7 @@
               [class.ml-[-8px]]="sidebarService.isCollapsed()">Contas</span>
       </a>
 
-      <a href="#" class="flex items-center gap-4 py-3 px-4 rounded-full text-on-surface-variant font-medium transition-all duration-300 hover:bg-surface-container"
+      <a routerLink="/transacoes" class="flex items-center gap-4 py-3 px-4 rounded-full text-on-surface-variant font-medium transition-all duration-300 hover:bg-surface-container"
          [class.justify-start]="true">
         <span class="material-symbols-outlined flex-shrink-0 w-6 flex justify-center">receipt_long</span>
         <span class="whitespace-nowrap overflow-hidden transition-all duration-300"
@@ -74,13 +74,14 @@
 
       <!-- Bottom Actions -->
       <div class="mt-auto pt-6 flex flex-col gap-2 border-t border-outline-variant/30">
-        <button class="flex items-center gap-4 py-3 px-4 rounded-full text-on-surface-variant font-medium transition-all duration-300 hover:bg-surface-container w-full">
+        <a routerLink="/configuracoes" class="flex items-center gap-4 py-3 px-4 rounded-full text-on-surface-variant font-medium transition-all duration-300 hover:bg-surface-container w-full"
+           [class.justify-start]="true">
           <span class="material-symbols-outlined flex-shrink-0 w-6 flex justify-center">settings</span>
           <span class="whitespace-nowrap overflow-hidden transition-all duration-300 text-left"
                 [class.w-0]="sidebarService.isCollapsed()"
                 [class.opacity-0]="sidebarService.isCollapsed()"
                 [class.ml-[-8px]]="sidebarService.isCollapsed()">Configurações</span>
-        </button>
+        </a>
 
         <button (click)="logout()" class="flex items-center gap-4 py-3 px-4 rounded-full text-error font-medium transition-all duration-300 hover:bg-error-container/20 w-full">
           <span class="material-symbols-outlined flex-shrink-0 w-6 flex justify-center">logout</span>
@@ -115,25 +116,25 @@
             <p class="text-on-surface-variant">Acompanhe e controle suas despesas pessoais.</p>
           </div>
           <div class="mt-6 md:mt-0 flex flex-wrap gap-3">
-            <button (click)="exportToCSV()" class="flex items-center space-x-2 px-4 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-full text-sm font-medium text-on-surface shadow-sm hover:bg-surface-container-low transition-colors">
+            <button (click)="exportToCSV()" class="flex items-center space-x-2 px-4 py-2.5 bg-white border border-outline-variant rounded-xl text-sm font-medium text-on-surface shadow-sm hover:shadow-md hover:border-outline transition-all duration-200">
               <span class="material-symbols-outlined text-[18px]">table_chart</span>
               <span>Exportar Excel</span>
             </button>
             <div class="flex items-center gap-2">
-              <select [(ngModel)]="contaSelecionadaId" (change)="onContaChange()" class="bg-surface-container-low border border-outline-variant text-on-surface text-sm rounded-lg px-3 py-2 outline-none focus:border-primary transition-all">
+              <select [(ngModel)]="contaSelecionadaId" (change)="onContaChange()" class="bg-white border border-outline-variant text-on-surface text-sm rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm">
                 <option [value]="null">Todas as Contas</option>
                 <option *ngFor="let conta of contas()" [value]="conta.id">
                   {{ conta.nome }} ({{ conta.banco }})
                 </option>
               </select>
             </div>
-            <label [ngClass]="contas().length === 0 ? 'bg-surface-container-lowest text-on-surface-variant cursor-not-allowed border border-outline-variant opacity-60' : 'bg-primary text-on-primary hover:bg-primary/90 cursor-pointer shadow-sm hover:shadow-md'" 
-                   class="px-6 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2">
+            <label [ngClass]="contas().length === 0 ? 'bg-surface-container-lowest text-on-surface-variant cursor-not-allowed border border-outline-variant opacity-60' : 'bg-white text-on-surface hover:text-primary cursor-pointer border border-outline-variant shadow-sm hover:shadow-md hover:border-primary/30'" 
+                   class="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2">
               <span class="material-symbols-outlined text-[20px]">upload_file</span>
               {{ isUploadingExtrato() ? 'Lendo...' : 'Ler Extrato' }}
               <input type="file" (change)="onFileSelected($event)" class="hidden" accept=".pdf" [disabled]="contas().length === 0">
             </label>
-            <button (click)="abrirModalParaNovo()" class="flex items-center space-x-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium shadow-sm hover:bg-primary/90 transition-colors">
+            <button (click)="abrirModalParaNovo()" class="flex items-center space-x-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-medium shadow-[0_4px_14px_0_rgb(15,23,42,0.39)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.23)] hover:-translate-y-0.5 transition-all duration-200">
               <span class="material-symbols-outlined text-[18px]">add</span>
               <span>Novo Gasto</span>
             </button>
@@ -142,39 +143,43 @@
 
         <!-- SUMMARY CARDS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6 flex flex-col justify-between h-40 border-l-4 border-l-green-600">
-            <div>
-              <h3 class="text-xs font-semibold text-on-surface-variant tracking-wider uppercase mb-2">ENTRADAS</h3>
-              <p class="text-4xl font-bold text-[#0a7a3b]">R$ {{ totalEntradas() | number:'1.2-2' }}</p>
+          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-emerald-100 p-6 flex flex-col justify-between h-40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-100 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+            <div class="relative z-10">
+              <h3 class="text-xs font-bold text-emerald-800 tracking-wider uppercase mb-2">ENTRADAS</h3>
+              <p class="text-4xl font-extrabold text-emerald-600">R$ {{ totalEntradas() | number:'1.2-2' }}</p>
             </div>
-            <div class="flex items-center text-[#0a7a3b] text-sm font-medium">
-              <span class="material-symbols-outlined text-[16px] mr-1">arrow_upward</span>
+            <div class="flex items-center text-emerald-700 text-sm font-semibold relative z-10">
+              <span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
               Total Recebido
             </div>
           </div>
-          <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6 flex flex-col justify-between h-40">
+          
+          <div class="bg-white rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-slate-200 p-6 flex flex-col justify-between h-40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1">
             <div>
-              <h3 class="text-xs font-semibold text-on-surface-variant tracking-wider uppercase mb-2">GASTO FIXO MENSAL</h3>
-              <p class="text-4xl font-bold text-on-surface">R$ {{ stats().gastoFixoMensal | number:'1.2-2' }}</p>
+              <h3 class="text-xs font-bold text-slate-500 tracking-wider uppercase mb-2">GASTO FIXO MENSAL</h3>
+              <p class="text-4xl font-extrabold text-slate-800">R$ {{ stats().gastoFixoMensal | number:'1.2-2' }}</p>
             </div>
-            <p class="text-sm text-on-surface-variant">Total de parcelas</p>
+            <p class="text-sm font-medium text-slate-500">Total de parcelas e assinaturas</p>
           </div>
-          <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6 flex flex-col justify-between h-40 border-l-4 border-l-error">
-            <div>
-              <h3 class="text-xs font-semibold text-on-surface-variant tracking-wider uppercase mb-2">SAÍDAS</h3>
-              <p class="text-4xl font-bold text-error">R$ {{ totalSaidas() | number:'1.2-2' }}</p>
+          
+          <div class="bg-gradient-to-br from-rose-50 to-white rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-rose-100 p-6 flex flex-col justify-between h-40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-100 rounded-full blur-2xl opacity-60 pointer-events-none"></div>
+            <div class="relative z-10">
+              <h3 class="text-xs font-bold text-rose-800 tracking-wider uppercase mb-2">SAÍDAS</h3>
+              <p class="text-4xl font-extrabold text-rose-600">R$ {{ totalSaidas() | number:'1.2-2' }}</p>
             </div>
-            <div class="flex items-center text-error text-sm font-medium">
-              <span class="material-symbols-outlined text-[16px] mr-1">arrow_downward</span>
+            <div class="flex items-center text-rose-700 text-sm font-semibold relative z-10">
+              <span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
               Total Pago
             </div>
           </div>
         </div>
 
         <!-- DATA TABLE -->
-        <div class="bg-surface-container-lowest shadow-sm border border-outline-variant rounded-xl overflow-hidden">
-          <div class="px-6 py-5 border-b border-outline-variant">
-            <h2 class="text-lg font-bold text-on-surface">Extrato Financeiro</h2>
+        <div class="bg-white shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-slate-200 rounded-2xl overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
+            <h2 class="text-lg font-bold text-slate-800">Extrato Financeiro</h2>
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-outline-variant">
@@ -182,6 +187,7 @@
                 <tr>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">ID</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">DESCRIÇÃO / FAVORECIDO</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">CATEGORIA</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Nº DOC</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">DATA</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">STATUS</th>
@@ -200,6 +206,11 @@
                     <div *ngIf="gasto.status === 'Parcelado'" class="text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-tight mt-0.5">
                       {{ gasto.numeroParcelas }}x de R$ {{ gasto.valorParcela | number:'1.2-2' }}
                     </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container border border-outline-variant">
+                      {{ gasto.categoria || 'Outros' }}
+                    </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ gasto.nrDoc || '-' }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ gasto.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -247,6 +258,11 @@
         <div>
           <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Descrição</label>
           <input type="text" [(ngModel)]="novoGasto.descricao" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium" placeholder="Ex: Aluguel">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Categoria</label>
+          <input type="text" [(ngModel)]="novoGasto.categoria" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium" placeholder="Ex: Lazer, Comida, etc.">
         </div>
         
         <div class="grid grid-cols-2 gap-4">

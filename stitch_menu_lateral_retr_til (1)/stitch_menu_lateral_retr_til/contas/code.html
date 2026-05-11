@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WealthFlow - Contas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f0f3ff",
+                    "on-tertiary-container": "#ef4444",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#dce2f3",
+                    "background": "#f9f9ff",
+                    "surface-bright": "#f9f9ff",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#410004",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "on-surface": "#151c27",
+                    "tertiary": "#000000",
+                    "primary": "#000000",
+                    "tertiary-fixed": "#ffdad7",
+                    "primary-fixed": "#e5e2e1",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-secondary-container": "#00714d",
+                    "on-primary-fixed-variant": "#474646",
+                    "tertiary-container": "#410004",
+                    "on-primary": "#ffffff",
+                    "outline": "#747878",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#1c1b1b",
+                    "secondary": "#006c49",
+                    "inverse-primary": "#c8c6c5",
+                    "surface": "#f9f9ff",
+                    "surface-container-high": "#e2e8f8",
+                    "on-background": "#151c27",
+                    "surface-tint": "#5f5e5e",
+                    "secondary-fixed": "#6ffbbe",
+                    "secondary-container": "#6cf8bb",
+                    "secondary-fixed-dim": "#4edea3",
+                    "outline-variant": "#c4c7c7",
+                    "on-secondary-fixed": "#002113",
+                    "surface-dim": "#d3daea",
+                    "surface-container": "#e7eefe",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2a313d",
+                    "inverse-on-surface": "#ebf1ff",
+                    "on-surface-variant": "#444748",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container-highest": "#dce2f3",
+                    "on-primary-container": "#858383"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "gutter": "24px",
+                    "lg": "40px",
+                    "xl": "64px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "margin": "32px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Manrope"],
+                    "headline-xl": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9ff;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 h-screen w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col h-full py-6 px-4 space-y-2 z-50">
+<div class="mb-10 px-2">
+<h1 class="text-lg font-black text-gray-900 dark:text-white font-headline-md">WealthFlow</h1>
+<p class="text-xs text-gray-500 font-label-sm">Premium Finance</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 ease-in-out font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg font-semibold transition-all duration-200 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Contas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 ease-in-out font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span>Transações</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-gray-100 dark:border-gray-800 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 ease-in-out font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Configurações</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 ease-in-out font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sair</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-64 right-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-sm flex justify-between items-center px-6 py-3">
+<h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white font-headline-lg">Contas</h2>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<button class="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 active:scale-95 transition-transform text-gray-900 dark:text-white">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+<div class="relative group">
+<button class="p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 active:scale-95 transition-transform text-gray-900 dark:text-white">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-gray-200">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional studio portrait of a young male executive with a confident smile, wearing a modern dark suit. The background is a soft, out-of-focus high-end office with natural light, reflecting a corporate and disciplined atmosphere with a clean light-mode aesthetic. High resolution and detailed facial features are visible." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFPeTSAyLX7EB5um8gRTqjfKcai43iJgG5wRs5vjGvQw0LIDL1FsofrofaQckGWmVBaOyZJfksBXtyTpU127NZiZ5FEeb1BzEH4RxPLWSHHUyZODBodj6EmHMDeJRpVi5cICXo7pMNZWHtg2BEOJ7Uioz-v7QSh8-ef76TQU0Z9zNw9Cxqr9JEPaZ_qkCdYaWATzc573f3q9bqIr05Mq651ElStsXNRrnd_qGWhm_yNbfqNI8HwTEBo_LFtg2H5wBoGcWGdICYTnY"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-24 px-md pb-md max-w-7xl mx-auto space-y-8">
+<!-- Summary Bento Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Total Balance Card -->
+<div class="lg:col-span-2 bg-white rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-lg flex flex-col justify-between border border-gray-100/50">
+<div>
+<span class="text-on-surface-variant font-label-md uppercase">Saldo Total</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-headline-xl font-headline-xl text-primary">R$ 142.580,42</span>
+<span class="text-secondary font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                                +2.4%
+                            </span>
+</div>
+</div>
+<div class="mt-8 flex gap-4">
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-label-md hover:bg-gray-800 transition-colors active:scale-95 transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                            Adicionar Conta
+                        </button>
+<button class="bg-surface-container-low text-primary px-lg py-sm rounded-full font-label-md hover:bg-surface-container-high transition-colors active:scale-95 transition-transform">
+                            Relatórios
+                        </button>
+</div>
+</div>
+<!-- Quick Stats -->
+<div class="bg-surface-container-lowest rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-lg border border-gray-100/50 flex flex-col justify-center">
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-sm">Total em Bancos</p>
+<p class="font-headline-md text-primary">R$ 128.400</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-sm">Investimentos</p>
+<p class="font-headline-md text-primary">R$ 14.180</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bank Accounts Grid -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-headline-md font-headline-md text-primary">Contas Bancárias</h3>
+<button class="text-secondary font-label-md flex items-center gap-1 hover:underline">
+                        Ver todas
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Nubank Card -->
+<div class="bg-white rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-md border border-gray-100 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-purple-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="font-headline-md text-sm text-primary">Nubank</p>
+<p class="text-on-surface-variant text-xs">Conta Corrente</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-1">
+<p class="text-on-surface-variant text-label-sm">Saldo disponível</p>
+<p class="text-headline-md text-primary">R$ 42.500,00</p>
+</div>
+</div>
+<!-- Itaú Card -->
+<div class="bg-white rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-md border border-gray-100 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-orange-500 flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="font-headline-md text-sm text-primary">Itaú Personnalité</p>
+<p class="text-on-surface-variant text-xs">Conta Investimento</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-1">
+<p class="text-on-surface-variant text-label-sm">Saldo disponível</p>
+<p class="text-headline-md text-primary">R$ 85.900,42</p>
+</div>
+</div>
+<!-- Wallet Card -->
+<div class="bg-white rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-md border border-gray-100 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-gray-900 flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="wallet">wallet</span>
+</div>
+<div>
+<p class="font-headline-md text-sm text-primary">Carteira Digital</p>
+<p class="text-on-surface-variant text-xs">Espécie / Dinheiro</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-1">
+<p class="text-on-surface-variant text-label-sm">Saldo disponível</p>
+<p class="text-headline-md text-primary">R$ 14.180,00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Credit Cards Section -->
+<section class="bg-white rounded-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+<div class="px-md py-6 border-b border-gray-100 flex items-center justify-between">
+<h3 class="text-headline-md font-headline-md text-primary">Cartões de Crédito</h3>
+<span class="text-label-md text-on-surface-variant">2 Cartões Ativos</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-gray-50/50">
+<tr>
+<th class="px-md py-4 font-label-md text-on-surface-variant">CARTÃO</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant">FATURA ATUAL</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant">LIMITE DISPONÍVEL</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant">VENCIMENTO</th>
+<th class="px-md py-4 font-label-md text-on-surface-variant text-right">AÇÕES</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<tr class="hover:bg-gray-50/50 transition-colors">
+<td class="px-md py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 rounded bg-gradient-to-br from-purple-600 to-purple-800"></div>
+<div>
+<p class="font-bold text-primary font-body-md">Nubank Ultravioleta</p>
+<p class="text-xs text-on-surface-variant">Mastercard • 8842</p>
+</div>
+</div>
+</td>
+<td class="px-md py-5">
+<p class="text-on-tertiary-container font-semibold">R$ 4.250,80</p>
+</td>
+<td class="px-md py-5">
+<div class="space-y-1">
+<p class="text-primary font-medium">R$ 15.749,20</p>
+<div class="w-32 h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="bg-purple-600 h-full w-[25%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-5 text-on-surface-variant">Dia 12</td>
+<td class="px-md py-5 text-right">
+<button class="text-primary hover:bg-gray-100 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50/50 transition-colors">
+<td class="px-md py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 rounded bg-gradient-to-br from-orange-500 to-orange-700"></div>
+<div>
+<p class="font-bold text-primary font-body-md">Itaú Infinite</p>
+<p class="text-xs text-on-surface-variant">Visa • 4410</p>
+</div>
+</div>
+</td>
+<td class="px-md py-5">
+<p class="text-on-tertiary-container font-semibold">R$ 1.120,00</p>
+</td>
+<td class="px-md py-5">
+<div class="space-y-1">
+<p class="text-primary font-medium">R$ 48.880,00</p>
+<div class="w-32 h-1 bg-gray-100 rounded-full overflow-hidden">
+<div class="bg-orange-500 h-full w-[5%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-5 text-on-surface-variant">Dia 25</td>
+<td class="px-md py-5 text-right">
+<button class="text-primary hover:bg-gray-100 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB Action (Contextual for Account Screen) -->
+<div class="fixed bottom-10 right-10 z-50">
+<button class="w-16 h-16 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform hover:bg-gray-800">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</div>
+</body></html>

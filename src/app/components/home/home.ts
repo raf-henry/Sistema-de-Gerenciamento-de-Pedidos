@@ -53,6 +53,7 @@ export class Home implements OnInit {
   
   novoGasto = {
     descricao: '',
+    categoria: 'Outros',
     valor: 0,
     tipo: 'DESPESA',
     status: 'Pago',
@@ -97,7 +98,7 @@ export class Home implements OnInit {
   abrirModalParaNovo() {
     this.isEditing = false;
     this.selectedExpenseId = null;
-    this.novoGasto = { descricao: '', valor: 0, tipo: 'DESPESA', status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
+    this.novoGasto = { descricao: '', categoria: 'Outros', valor: 0, tipo: 'DESPESA', status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
     this.showModal = true;
   }
 
@@ -106,6 +107,7 @@ export class Home implements OnInit {
     this.selectedExpenseId = gasto.id;
     this.novoGasto = { 
       descricao: gasto.descricao, 
+      categoria: gasto.categoria || 'Outros',
       valor: gasto.valor,
       tipo: gasto.tipo || 'DESPESA',
       status: gasto.status || 'Pago',
@@ -157,7 +159,7 @@ export class Home implements OnInit {
 
   private finalizarOperacao() {
     this.showModal = false;
-    this.novoGasto = { descricao: '', valor: 0, tipo: 'DESPESA', status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
+    this.novoGasto = { descricao: '', categoria: 'Outros', valor: 0, tipo: 'DESPESA', status: 'Pago', numeroParcelas: 1, valorParcela: 0 };
     this.loadDashboardData();
   }
 
@@ -203,7 +205,7 @@ export class Home implements OnInit {
       return;
     }
 
-    const colunas = ['ID', 'TIPO', 'DESCRIÇÃO', 'FAVORECIDO', 'CPF/CNPJ', 'Nº DOC', 'STATUS', 'VALOR', 'DATA'];
+    const colunas = ['ID', 'TIPO', 'CATEGORIA', 'DESCRIÇÃO', 'FAVORECIDO', 'CPF/CNPJ', 'Nº DOC', 'STATUS', 'VALOR', 'DATA'];
     
     // Adiciona o BOM (\uFEFF) para o Excel reconhecer acentuação corretamente
     let csvContent = '\uFEFF'; 
@@ -225,6 +227,7 @@ export class Home implements OnInit {
       const row = [
         item.id,
         item.tipo || 'DESPESA',
+        `"${item.categoria || 'Outros'}"`,
         `"${item.descricao ? item.descricao.replace(/"/g, '""') : ''}"`,
         `"${item.favorecido ? item.favorecido.replace(/"/g, '""') : ''}"`,
         `"${item.cpfCnpj || ''}"`,

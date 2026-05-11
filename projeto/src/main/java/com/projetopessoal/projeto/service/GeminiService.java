@@ -25,11 +25,8 @@ public class GeminiService {
 
     public List<Map<String, Object>> processarExtratoCaixa(byte[] pdfBytes) throws Exception {
         if ("NOT_FOUND".equals(apiKey) || apiKey.startsWith("${")) {
-            System.err.println("ERRO CRÍTICO: Chave da API Gemini não encontrada! Verifique o arquivo .env ou as variáveis de ambiente.");
             throw new RuntimeException("Configuração de API ausente.");
         }
-        
-        System.out.println("DEBUG: Usando Chave API (prefixo): " + apiKey.substring(0, 5) + "...");
         
         String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
 
@@ -48,8 +45,13 @@ public class GeminiService {
                 "   - 'cpfCnpj': O CPF ou CNPJ (se houver). " +
                 "   - 'saldo': O valor do saldo final após a transação (se legível). " +
                 "   - 'dataGasto': A data ('Lançamentos') no formato ISO (YYYY-MM-DDTHH:MM:SS). Se não houver hora, use 12:00:00. " +
+                "   - 'categoria': A categoria da transação baseada no histórico ou favorecido. Exemplos: " +
+                "       'Lazer' (steam, epicgames, etc); " +
+                "       'Alimentação' (iFood, Rappi, Zé Delivery, Loggi, Daki, Aiqfome, Delivery Much, James Delivery, Lalamove, Borzo, Pede.ai, Appito, Justo, Cornershop, Uber Eats, Flash Courier, Clique Retire); " +
+                "       'Transporte' (postos de gasolina, Uber, 99, Indrive, Maxim, Uber Flash, 99Entrega, Wappa, MobizapSP, Bibi Mob, Garupa, Lady Driver, Stop Club, Urban, Tembici, V1, BlaBlaCar, Zarp Localiza, Sity, MeBusca). " +
+                "       Use 'Outros' se não for possível classificar de acordo. " +
                 "4. Responda APENAS com um array JSON válido, sem markdown ou explicações. " +
-                "Exemplo de saída: [{\"descricao\": \"PIX ENVIADO\", \"valor\": 20.00, \"tipo\": \"DESPESA\", \"nrDoc\": \"123456\", \"favorecido\": \"Hayane Rafaela Bon\", \"cpfCnpj\": \"***.123.456-**\", \"saldo\": 1500.50, \"dataGasto\": \"2024-05-01T20:26:00\"}]";
+                "Exemplo de saída: [{\"descricao\": \"PIX ENVIADO\", \"valor\": 20.00, \"tipo\": \"DESPESA\", \"nrDoc\": \"123456\", \"favorecido\": \"Uber BR\", \"cpfCnpj\": \"***.123.456-**\", \"saldo\": 1500.50, \"dataGasto\": \"2024-05-01T20:26:00\", \"categoria\": \"Transporte\"}]";
 
         Map<String, Object> requestBody = Map.of(
                 "contents", List.of(

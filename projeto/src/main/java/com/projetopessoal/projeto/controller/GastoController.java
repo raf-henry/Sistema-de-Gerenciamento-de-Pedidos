@@ -21,7 +21,6 @@ import com.projetopessoal.projeto.service.GeminiService;
 
 @RestController
 @RequestMapping("/api/gastos")
-@CrossOrigin(origins = "http://localhost:4200")
 public class GastoController {
 
     @Autowired
@@ -41,21 +40,15 @@ public class GastoController {
 
     private User getAuthenticatedUser(UserDetails userDetails) {
         if (userDetails == null) {
-            System.err.println("DEBUG ERROR: AuthenticationPrincipal (userDetails) está NULO no Controller.");
-            throw new RuntimeException("Sessão inválida: O Spring Security não identificou o usuário logado.");
+            throw new RuntimeException("Sessão inválida.");
         }
-        System.out.println("DEBUG: Buscando usuário no banco: " + userDetails.getUsername());
         return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> {
-                    System.err.println("DEBUG ERROR: Usuário '" + userDetails.getUsername() + "' existe no Token mas NÃO existe na tabela 'users' do Banco.");
-                    return new RuntimeException("Usuário não encontrado na base de dados. Registre-se novamente.");
-                });
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
     }
 
     @PostMapping
     public ResponseEntity<?> criarGasto(@RequestBody Map<String, Object> payload, @AuthenticationPrincipal UserDetails userDetails) {
         try {
-            System.out.println("DEBUG: Iniciando criação de gasto para: " + (userDetails != null ? userDetails.getUsername() : "NULO"));
             User user = getAuthenticatedUser(userDetails);
             
             String descricao = (String) payload.get("descricao");
@@ -90,15 +83,10 @@ public class GastoController {
             novoGasto.setUsuario(user);
             
             Gasto salvo = gastoRepository.save(novoGasto);
-            System.out.println("DEBUG: Gasto salvo com sucesso. ID: " + salvo.getId());
             return ResponseEntity.ok(salvo);
         } catch (Exception e) {
-            System.err.println("DEBUG CRITICAL ERROR em criarGasto: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.status(500).body(Map.of(
-                "error", "Falha interna ao salvar gasto",
-                "details", e.getMessage(),
-                "user", userDetails != null ? userDetails.getUsername() : "null"
+                "error", "Falha interna ao salvar gasto"
             ));
         }
     }
@@ -115,6 +103,18 @@ public class GastoController {
 
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Arquivo vazio."));
+            }
+
+            // Validação de tipo de arquivo (apenas PDF)
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.equals("application/pdf")) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Apenas arquivos PDF são aceitos."));
+            }
+
+            // Validação de tamanho (máximo 10MB)
+            long maxSize = 10 * 1024 * 1024; // 10MB
+            if (file.getSize() > maxSize) {
+                return ResponseEntity.badRequest().body(Map.of("error", "O arquivo excede o tamanho máximo de 10MB."));
             }
 
             // Envia o PDF para o GeminiService
@@ -138,6 +138,11 @@ public class GastoController {
                 }
                 if (dado.containsKey("cpfCnpj")) {
                     novoGasto.setCpfCnpj((String) dado.get("cpfCnpj"));
+                }
+                if (dado.containsKey("categoria")) {
+                    novoGasto.setCategoria((String) dado.get("categoria"));
+                } else {
+                    novoGasto.setCategoria("Outros");
                 }
                 if (dado.containsKey("saldo") && dado.get("saldo") != null) {
                     try {
@@ -172,8 +177,7 @@ public class GastoController {
             return ResponseEntity.ok(Map.of("message", "Extrato processado com sucesso!", "lidos", salvos));
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(Map.of("error", "Falha ao processar o extrato: " + e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("error", "Falha ao processar o extrato."));
         }
     }
 

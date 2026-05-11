@@ -1,21 +1,33 @@
-<div class="min-h-screen bg-background flex items-center justify-center p-4">
-  <div class="w-full max-w-md bg-surface-container-lowest rounded-[32px] shadow-2xl border border-outline-variant p-10 space-y-8">
+<div class="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+  <!-- Background Decor -->
+  <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px]"></div>
+
+  <div class="w-full max-w-md bg-surface-container-lowest rounded-[32px] shadow-2xl border border-outline-variant p-10 space-y-8 relative z-10">
     <div class="text-center">
       <div class="inline-flex items-center justify-center p-3 bg-secondary text-on-secondary rounded-2xl mb-4 shadow-lg shadow-secondary/20">
         <span class="material-symbols-outlined text-3xl">person_add</span>
       </div>
       <h1 class="text-3xl font-bold tracking-tight text-on-surface">Criar Conta</h1>
-      <p class="text-on-surface-variant mt-2">Junte-se ao FinanceSys hoje</p>
+      <p class="text-on-surface-variant mt-2">Inicie sua jornada financeira hoje</p>
     </div>
 
-    <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="space-y-6">
+    @if (errorMessage() && !isModalOpen()) {
+      <div class="p-4 rounded-xl text-sm font-medium flex items-center gap-3 bg-rose-50 text-rose-800 border border-rose-200 animate-fade-up">
+        <span class="material-symbols-outlined text-[20px]">error</span>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Main Form -->
+    <form (ngSubmit)="sendCode()" #registerForm="ngForm" class="space-y-6">
       <div class="space-y-2">
         <label for="email" class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">E-mail</label>
         <div class="relative">
           <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">mail</span>
           <input type="email" id="email" name="email" [(ngModel)]="registerData.email" 
             class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
-            placeholder="Seu melhor e-mail" required>
+            placeholder="seu@email.com" required email [disabled]="isLoading()">
         </div>
       </div>
 
@@ -25,7 +37,7 @@
           <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
           <input type="password" id="password" name="password" [(ngModel)]="registerData.password" 
             class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
-            placeholder="Crie uma senha forte" required>
+            placeholder="Crie uma senha" required [disabled]="isLoading()">
         </div>
       </div>
 
@@ -35,21 +47,78 @@
           <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock_reset</span>
           <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="registerData.confirmPassword" 
             class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
-            placeholder="Repita sua senha" required>
+            placeholder="Repita a senha" required [disabled]="isLoading()">
         </div>
       </div>
 
-      <button type="submit" [disabled]="!registerForm.valid" 
-        class="w-full py-4 bg-primary text-on-primary rounded-full font-bold shadow-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100">
-        Registrar agora
+      <button type="submit" [disabled]="!registerForm.valid || isLoading()" 
+        class="w-full py-4 bg-primary text-on-primary rounded-full font-bold shadow-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 flex justify-center items-center gap-2">
+        @if (isLoading()) {
+          <span class="material-symbols-outlined animate-spin">progress_activity</span>
+        }
+        {{ isLoading() ? 'Processando...' : 'Cadastrar e Validar E-mail' }}
       </button>
     </form>
 
     <div class="text-center pt-4 border-t border-outline-variant/30">
       <p class="text-sm text-on-surface-variant">
         Já tem uma conta? 
-        <a routerLink="/login" class="font-bold text-primary hover:underline">Faça Login</a>
+        <a routerLink="/login" class="font-bold text-primary hover:underline transition-all">Faça Login</a>
       </p>
     </div>
   </div>
+
+  <!-- Verification Modal -->
+  @if (isModalOpen()) {
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="!isLoading() && isModalOpen.set(false)"></div>
+      
+      <!-- Modal Card -->
+      <div class="w-full max-w-sm bg-white rounded-[32px] shadow-2xl border border-outline-variant p-8 relative z-10 animate-fade-up">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl">mark_email_unread</span>
+          </div>
+          <h2 class="text-2xl font-bold text-on-surface">Verifique seu E-mail</h2>
+          <p class="text-sm text-on-surface-variant mt-2">
+            Insira o código de 6 dígitos enviado para <br>
+            <span class="font-bold text-on-surface">{{ registerData.email }}</span>
+          </p>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="mb-4 p-3 rounded-xl text-xs font-medium flex items-center gap-2 bg-rose-50 text-rose-800 border border-rose-200">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()" #modalForm="ngForm" class="space-y-6">
+          <div class="space-y-2">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">pin</span>
+              <input type="text" id="modalCode" name="modalCode" [(ngModel)]="registerData.code" 
+                class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-transparent focus:border-primary rounded-2xl outline-none transition-all text-2xl font-bold tracking-[0.5em] text-center" 
+                placeholder="000000" maxlength="6" required [disabled]="isLoading()" autofocus>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="!modalForm.valid || isLoading()" 
+            class="w-full py-4 bg-primary text-on-primary rounded-full font-bold shadow-lg hover:shadow-primary/30 transition-all active:scale-95 disabled:opacity-50 flex justify-center items-center gap-2">
+            @if (isLoading()) {
+              <span class="material-symbols-outlined animate-spin">progress_activity</span>
+            }
+            {{ isLoading() ? 'Verificando...' : 'Confirmar e Finalizar' }}
+          </button>
+
+          <button type="button" (click)="isModalOpen.set(false); errorMessage.set('')" [disabled]="isLoading()" 
+            class="w-full py-2 text-sm text-on-surface-variant font-medium hover:text-primary transition-colors">
+            Alterar dados do cadastro
+          </button>
+        </form>
+      </div>
+    </div>
+  }
 </div>
+

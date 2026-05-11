@@ -34,6 +34,8 @@ public class Gasto {
     @Column(nullable = false)
     private String tipo = "DESPESA"; // "RECEITA" ou "DESPESA"
 
+    private String categoria = "Outros";
+
     private String nrDoc;
     private String favorecido;
     private String cpfCnpj;
