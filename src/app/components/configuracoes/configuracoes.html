@@ -135,17 +135,17 @@
             <form class="space-y-3 flex-1 flex flex-col">
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="current-password">Senha Atual</label>
-                <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
+                <input class="w-full h-12 px-4 mb-1 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="current-password" placeholder="••••••••" type="password" [(ngModel)]="currentPasswordForPw" name="currentPasswordForPw"/>
               </div>
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="new-password">Nova Senha</label>
-                <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
+                <input class="w-full h-12 px-4 mb-1 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="new-password" placeholder="Nova senha segura" type="password" [(ngModel)]="newPassword" name="newPassword"/>
               </div>
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="confirm-password">Confirmar Nova Senha</label>
-                <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
+                <input class="w-full h-12 px-4 mb-1 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="confirm-password" placeholder="Repita a nova senha" type="password" [(ngModel)]="confirmPassword" name="confirmPassword"/>
               </div>
               <div class="mt-auto pt-6">
@@ -185,20 +185,21 @@
               <!-- Added Current Password field for security verification (Required by Backend) -->
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="email-current-password">Senha Atual</label>
-                <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
+                <input class="w-full h-12 px-4 mb-1 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="email-current-password" placeholder="Confirme sua identidade" type="password" [(ngModel)]="currentPasswordForEmail" name="currentPasswordForEmail"/>
               </div>
 
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="new-email">Novo Email</label>
-                <div class="relative">
-                  <input class="w-full h-12 px-4 rounded-full border bg-surface outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50 pr-10" 
+                <div>
+                  <input class="w-full h-12 px-4 mb-1 rounded-full border bg-surface outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                          [ngClass]="emailError() ? 'border-error focus:border-error focus:ring-1 focus:ring-error text-error' : 'border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary'"
                          id="new-email" placeholder="novo@email.com" type="email" [(ngModel)]="newEmail" name="newEmail"
                          (blur)="checkEmailAvailability()"/>
-                  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
-                    <span *ngIf="checkingEmail()" class="material-symbols-outlined text-primary text-[20px] animate-spin">progress_activity</span>
-                    <span *ngIf="emailError()" class="material-symbols-outlined text-error text-[20px]">error</span>
+                  <div *ngIf="checkingEmail() || emailError()" class="flex items-center gap-2 mt-1 ml-4 animate-fade-up">
+                    <span *ngIf="checkingEmail()" class="material-symbols-outlined text-primary text-[18px] animate-spin">progress_activity</span>
+                    <span *ngIf="emailError()" class="material-symbols-outlined text-error text-[18px]">error</span>
+                    <span *ngIf="checkingEmail()" class="text-xs text-primary font-medium">Verificando disponibilidade...</span>
                   </div>
                 </div>
                 <p *ngIf="emailError()" class="text-xs text-error mt-1.5 font-medium ml-2">{{ emailError() }}</p>
@@ -206,7 +207,7 @@
               
               <div>
                 <label class="block text-sm font-semibold text-on-surface mb-2" for="confirm-email">Confirmar Novo Email</label>
-                <input class="w-full h-12 px-4 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
+                <input class="w-full h-12 px-4 mb-1 rounded-full border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-base text-on-surface placeholder-on-surface-variant/50" 
                        id="confirm-email" placeholder="Repita o novo email" type="email" [(ngModel)]="confirmEmail" name="confirmEmail"/>
               </div>
               
