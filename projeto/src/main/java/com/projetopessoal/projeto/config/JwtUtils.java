@@ -20,17 +20,13 @@ public class JwtUtils {
     private final Key key;
     private final long expirationTime = 1000 * 60 * 60 * 10; // 10 horas
 
-    public JwtUtils(@Value("${JWT_SECRET:chave_padrao_somente_para_dev_trocar_em_producao_obrigatoriamente}") String secretKey) {
+    public JwtUtils(@Value("${JWT_SECRET:chave_padrao_muito_longa_e_aleatoria_que_deve_ser_trocada_em_producao_1234567890}") String secretKey) {
         // Garante que a chave tem pelo menos 256 bits (32 bytes) para HMAC-SHA256
         byte[] keyBytes = secretKey.getBytes();
         if (keyBytes.length < 32) {
-            // Pad com zeros se necessário (fallback para dev)
-            byte[] paddedKey = new byte[32];
-            System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 32));
-            this.key = Keys.hmacShaKeyFor(paddedKey);
-        } else {
-            this.key = Keys.hmacShaKeyFor(keyBytes);
+            throw new RuntimeException("A chave JWT_SECRET deve ter pelo menos 32 caracteres (256 bits).");
         }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(String username) {

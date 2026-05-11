@@ -39,7 +39,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
                 // Apenas endpoints estritamente públicos (login, registro, envio de código)
                 .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/send-code").permitAll()
                 .anyRequest().authenticated()

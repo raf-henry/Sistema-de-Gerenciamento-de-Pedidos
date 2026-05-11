@@ -19,6 +19,12 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final VerificationService verificationService;
+    
+    // Simples Rate Limiter em memória para proteção contra Brute Force
+    private final java.util.Map<String, Integer> attemptsCache = new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.Map<String, Long> lockTimeCache = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final int MAX_ATTEMPTS = 5;
+    private static final long LOCK_TIME = 15 * 60 * 1000; // 15 minutos
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, VerificationService verificationService) {
         this.userRepository = userRepository;
@@ -32,11 +38,17 @@ public class AuthController {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
+        // Verificação de Rate Limit
+        if (isLocked(email)) {
+            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
+        }
+
         Optional<User> userOpt = userRepository.findByUsername(email);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
+                clearAttempts(email);
                 String token = jwtUtils.generateToken(user.getUsername());
                 return ResponseEntity.ok(Map.of(
                         "token", token,
@@ -45,7 +57,33 @@ public class AuthController {
                 ));
             }
         }
-        return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+        
+        registerAttempt(email);
+        return ResponseEntity.status(401).body(Map.of("error", "Credenciais inválidas"));
+    }
+
+    private boolean isLocked(String key) {
+        if (lockTimeCache.containsKey(key)) {
+            if (System.currentTimeMillis() < lockTimeCache.get(key)) {
+                return true;
+            }
+            lockTimeCache.remove(key);
+            attemptsCache.remove(key);
+        }
+        return false;
+    }
+
+    private void registerAttempt(String key) {
+        int attempts = attemptsCache.getOrDefault(key, 0) + 1;
+        attemptsCache.put(key, attempts);
+        if (attempts >= MAX_ATTEMPTS) {
+            lockTimeCache.put(key, System.currentTimeMillis() + LOCK_TIME);
+        }
+    }
+
+    private void clearAttempts(String key) {
+        attemptsCache.remove(key);
+        lockTimeCache.remove(key);
     }
 
     @PostMapping("/send-code")
@@ -54,7 +92,14 @@ public class AuthController {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "E-mail inválido."));
         }
+        
+        // Verificação de Rate Limit
+        if (isLocked(email)) {
+            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
+        }
+
         if (userRepository.findByUsername(email).isPresent()) {
+            registerAttempt(email); // Registra tentativa para evitar enumeração rápida
             return ResponseEntity.badRequest().body(Map.of("error", "Usuário já existe."));
         }
         String code = verificationService.generateAndSendCode(email);
@@ -72,6 +117,11 @@ public class AuthController {
 
         if (email == null || password == null || code == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Preencha todos os campos, incluindo o código de verificação."));
+        }
+        
+        // Verificação de Rate Limit
+        if (isLocked(email)) {
+            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
         }
 
         if (password.length() < 8) {

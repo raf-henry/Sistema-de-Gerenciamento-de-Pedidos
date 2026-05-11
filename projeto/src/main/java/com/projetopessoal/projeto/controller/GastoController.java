@@ -77,6 +77,12 @@ public class GastoController {
             if (payload.containsKey("contaId") && payload.get("contaId") != null) {
                 Long contaId = Long.parseLong(payload.get("contaId").toString());
                 Conta conta = contaRepository.findById(contaId).orElse(null);
+                
+                // Correção de Vulnerabilidade IDOR: Verifica se a conta pertence ao usuário
+                if (conta != null && !conta.getUsuario().getId().equals(user.getId())) {
+                    return ResponseEntity.status(403).body(Map.of("error", "Acesso negado a esta conta."));
+                }
+                
                 novoGasto.setConta(conta);
             }
 
