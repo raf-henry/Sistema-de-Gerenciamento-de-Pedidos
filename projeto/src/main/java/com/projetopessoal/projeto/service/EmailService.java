@@ -7,56 +7,58 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class EmailService {
 
-    @Value("${RESEND_API_KEY:}")
-    private String resendApiKey;
+    @Value("${BREVO_API_KEY:}")
+    private String brevoApiKey;
+
+    @Value("${BREVO_SENDER_EMAIL:noreply@financesys.com}")
+    private String senderEmail;
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
     public void sendVerificationCode(String to, String code) {
-        // Se não houver API Key, apenas loga o código (útil para dev local)
-        if (resendApiKey == null || resendApiKey.isEmpty()) {
-            System.err.println("============= MOCK EMAIL (RESEND) =============");
-            System.err.println("API Key do Resend não configurada.");
+        if (brevoApiKey == null || brevoApiKey.isEmpty()) {
+            System.err.println("============= MOCK EMAIL (BREVO) =============");
+            System.err.println("API Key do Brevo não configurada.");
             System.err.println("Para: " + to + " | CÓDIGO: " + code);
-            System.err.println("===============================================");
+            System.err.println("==============================================");
             return;
         }
 
         try {
-            String url = "https://api.resend.com/emails";
+            String url = "https://api.brevo.com/v3/smtp/email";
 
             Map<String, Object> body = Map.of(
-                "from", "FinanceSys <onboarding@resend.dev>",
-                "to", to,
+                "sender", Map.of("name", "FinanceSys", "email", senderEmail),
+                "to", List.of(Map.of("email", to)),
                 "subject", "Seu código de verificação - FinanceSys",
-                "html", "<strong>Olá!</strong><br><br>Seu código de verificação para cadastro no FinanceSys é: <h2>" + code + "</h2><br>Este código é válido por 10 minutos."
+                "htmlContent", "<html><body><strong>Olá!</strong><br><br>Seu código de verificação para cadastro no FinanceSys é: <h2>" + code + "</h2><br>Este código é válido por 10 minutos.</body></html>"
             );
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(resendApiKey);
+            headers.set("api-key", brevoApiKey);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println("E-mail enviado via Resend para: " + to);
+                System.out.println("E-mail enviado via Brevo para: " + to);
             } else {
-                System.err.println("Falha ao enviar via Resend: " + response.getBody());
+                System.err.println("Falha ao enviar via Brevo: " + response.getBody());
             }
 
         } catch (Exception e) {
-            System.err.println("============= ERRO RESEND =============");
-            System.err.println("Erro ao chamar API do Resend: " + e.getMessage());
+            System.err.println("============= ERRO BREVO =============");
+            System.err.println("Erro ao chamar API do Brevo: " + e.getMessage());
             System.err.println("CÓDIGO: " + code);
-            System.err.println("=======================================");
+            System.err.println("======================================");
         }
     }
 }
