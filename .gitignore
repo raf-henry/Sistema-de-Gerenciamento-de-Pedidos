@@ -32,7 +32,17 @@ yarn-error.log
 Thumbs.db
 desktop.ini
 
-# Project specific
-DESING.md
+# Secrets and environment
 .env
 .env.*
+
+# AI Agent tooling (Gemini, Copilot, etc.)
+.agents/
+skills-lock.json
+
+# Stitch design prototypes (não fazem parte do app)
+stitch_menu_lateral_retr_til*/
+
+# Orphan prototype files
+transacoes.html
+DESING.md
