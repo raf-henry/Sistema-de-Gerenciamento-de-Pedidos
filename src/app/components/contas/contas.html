@@ -102,7 +102,7 @@
         <h2 class="text-xl font-bold tracking-tight text-on-surface">Contas</h2>
       </div>
       <div class="flex items-center">
-        <span class="text-sm text-on-surface-variant">Olá, <strong class="text-on-surface">{{ userName }}</strong></span>
+        <span class="text-sm text-on-surface-variant">Olá, <strong class="text-primary font-bold">{{ userName }}</strong></span>
       </div>
     </header>
 
@@ -197,13 +197,13 @@
 
     <form (submit)="salvarConta(); $event.preventDefault()" class="space-y-6">
       <div>
-        <label class="block text-sm font-medium text-on-surface-variant mb-2">Nome da Conta (Apelido)</label>
+        <label class="block text-sm font-semibold text-on-surface mb-3">Nome da Conta (Apelido)</label>
         <input [(ngModel)]="novaConta.nome" name="nome" type="text" placeholder="Ex: Minha Conta Caixa" required
                class="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant outline-none focus:border-primary transition-all">
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-on-surface-variant mb-2">Banco</label>
+        <label class="block text-sm font-semibold text-on-surface mb-3">Banco</label>
         <select [(ngModel)]="novaConta.banco" name="banco"
                 class="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant outline-none focus:border-primary transition-all">
           <option value="CAIXA">Caixa Econômica</option>

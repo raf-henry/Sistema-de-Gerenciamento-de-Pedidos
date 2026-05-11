@@ -109,7 +109,7 @@
         <button class="p-2 hover:bg-surface-container-low rounded-full transition-transform active:scale-95">
           <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
         </button>
-        <span class="text-sm text-on-surface-variant ml-2">Olá, <strong class="text-on-surface">{{ userName }}</strong></span>
+        <span class="text-sm text-on-surface-variant ml-2">Olá, <strong class="text-primary font-bold">{{ userName }}</strong></span>
       </div>
     </header>
 
@@ -122,7 +122,7 @@
           <div class="bg-white rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-slate-200 p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
             <div class="flex flex-wrap items-end gap-6">
               <div class="flex-1 min-w-[300px]">
-                <label class="text-xs font-semibold text-on-surface-variant mb-2 block uppercase tracking-widest">Período (Início / Fim)</label>
+                <label class="text-xs font-semibold text-on-surface-variant mb-3 block uppercase tracking-widest">Período (Início / Fim)</label>
                 <div class="flex items-center gap-2">
                   <input [ngModel]="dataInicio()" (ngModelChange)="dataInicio.set($event)" class="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg text-sm focus:border-primary outline-none transition-colors" type="date"/>
                   <span class="text-on-surface-variant">até</span>
@@ -130,7 +130,7 @@
                 </div>
               </div>
               <div class="flex-1 min-w-[200px]">
-                <label class="text-xs font-semibold text-on-surface-variant mb-2 block uppercase tracking-widest">Categoria</label>
+                <label class="text-xs font-semibold text-on-surface-variant mb-3 block uppercase tracking-widest">Categoria</label>
                 <select [ngModel]="categoriaSelecionada()" (ngModelChange)="categoriaSelecionada.set($event)" class="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-lg text-sm focus:border-primary outline-none transition-colors appearance-none">
                   <option value="Todas">Todas as Categorias</option>
                   <option value="Lazer">Lazer</option>
@@ -140,7 +140,7 @@
                 </select>
               </div>
               <div class="flex-1 min-w-[200px]">
-                <label class="text-xs font-semibold text-on-surface-variant mb-2 block uppercase tracking-widest">Conta</label>
+                <label class="text-xs font-semibold text-on-surface-variant mb-3 block uppercase tracking-widest">Conta</label>
                 <select [(ngModel)]="contaSelecionadaId" (change)="loadTransacoes()" class="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-lg text-sm focus:border-primary outline-none transition-colors appearance-none">
                   <option [ngValue]="null">Todas as Contas</option>
                   <option *ngFor="let conta of contas()" [ngValue]="conta.id">{{ conta.nome }} ({{ conta.banco }})</option>
@@ -246,31 +246,31 @@
       
       <div class="px-8 pb-8 space-y-4">
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Descrição</label>
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Descrição</label>
           <input type="text" [(ngModel)]="novoGasto.descricao" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium" placeholder="Ex: Aluguel">
         </div>
 
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Categoria</label>
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Categoria</label>
           <input type="text" [(ngModel)]="novoGasto.categoria" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium" placeholder="Ex: Lazer, Comida, etc.">
         </div>
         
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Tipo</label>
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Tipo</label>
             <select [(ngModel)]="novoGasto.tipo" (change)="novoGasto.status = (novoGasto.tipo === 'RECEITA' ? 'Recebido' : 'Pago')" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium">
               <option value="DESPESA">Saída (Gasto)</option>
               <option value="RECEITA">Entrada (Receita)</option>
             </select>
           </div>
           <div>
-            <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Valor</label>
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Valor</label>
             <input type="number" [(ngModel)]="novoGasto.valor" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium">
           </div>
         </div>
 
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Status</label>
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Status</label>
           <select [(ngModel)]="novoGasto.status" class="w-full px-4 py-2.5 bg-surface-container-low border border-transparent focus:border-primary rounded-lg outline-none transition-all text-sm font-medium">
             <option *ngIf="novoGasto.tipo === 'RECEITA'" value="Recebido">Recebido</option>
             <option *ngIf="novoGasto.tipo === 'DESPESA'" value="Pago">Pago</option>
@@ -281,11 +281,11 @@
         <div *ngIf="novoGasto.status === 'Parcelado'" class="bg-surface-container-low p-4 rounded-xl space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Parcelas</label>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Parcelas</label>
               <input type="number" [(ngModel)]="novoGasto.numeroParcelas" (change)="calcularTotal()" class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant focus:border-primary rounded-lg outline-none text-sm font-medium">
             </div>
             <div>
-              <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1.5">Valor Un.</label>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Valor Un.</label>
               <input type="number" [(ngModel)]="novoGasto.valorParcela" (change)="calcularTotal()" class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant focus:border-primary rounded-lg outline-none text-sm font-medium">
             </div>
           </div>
