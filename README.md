@@ -1,61 +1,92 @@
-# FinanceSys - Controle de Finanças Pessoais Inteligente
+# FinanceSys - Gestão Financeira Inteligente 🚀
 
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
 
-Este é um projeto full-stack para gerenciamento de finanças pessoais. O sistema foi projetado com uma arquitetura moderna e segura, oferecendo controle detalhado de receitas e despesas, leitura inteligente de extratos bancários via Inteligência Artificial e uma interface fluida.
+FinanceSys é uma plataforma completa de gerenciamento financeiro pessoal, projetada para oferecer segurança, inteligência e facilidade de uso. O sistema permite o controle de múltiplas contas, importação automatizada de extratos via IA e análise de dados em tempo real.
 
-## 🚀 Tecnologias Utilizadas
+---
+
+## 🌐 Deploy em Produção
+A aplicação está totalmente hospedada na nuvem:
+- **Frontend:** [Vercel](https://finance-sys-front-end.vercel.app/) (Angular)
+- **Backend:** [Render](https://financesys-backend-5nk1.onrender.com) (Spring Boot)
+- **Banco de Dados:** [Neon](https://neon.tech/) (PostgreSQL Serverless)
+
+---
+
+## ✨ Funcionalidades Principais
+- **🔒 Segurança Avançada:**
+  - Autenticação via **JWT** (Stateless).
+  - Verificação de e-mail obrigatória no cadastro via **Resend API**.
+  - Proteção contra **IDOR**: Validação rigorosa de propriedade de dados em todos os endpoints.
+  - Sanitização de erros para evitar vazamento de informações do servidor.
+- **🤖 Inteligência Artificial (Gemini):**
+  - Importação de extratos bancários em PDF.
+  - Processamento inteligente que converte PDFs complexos em transações estruturadas automaticamente.
+- **📊 Dashboard Dinâmico:**
+  - Visualização de saldos e gastos por conta bancária.
+  - Filtros reativos e estatísticas em tempo real usando Angular Signals.
+- **💼 Gestão de Contas:**
+  - Suporte a múltiplas instituições (Nubank, Itaú, Caixa, etc.).
+  - Isolamento completo de dados entre usuários.
+
+---
+
+## 🛠️ Tecnologias e Arquitetura
 
 ### Frontend
-- **Angular**: Framework SPA para a interface usando Signals para reatividade de estado.
-- **Tailwind CSS**: Estilização utilitária e componentes visuais premium (Glassmorphism e transições fluidas).
-- **Design System**: UI responsiva com navegação persistente e barra lateral animada.
-- **Segurança**: Autenticação via **JWT (JSON Web Token)** com interceptores HTTP.
+- **Framework:** Angular 19+
+- **Estilização:** Tailwind CSS (Modern UI/UX)
+- **Estado:** Signals & Services
+- **Deploy:** Vercel (CI/CD automático via GitHub)
 
 ### Backend
-- **Spring Boot 3+**: API REST robusta construída em Java.
-- **Spring Security**: Proteção de endpoints e sessões Stateless.
-- **Integração IA (Gemini)**: Comunicação direta com a API Google Gemini para interpretação autônoma de PDFs.
-- **PostgreSQL**: Banco de dados relacional.
+- **Framework:** Spring Boot 3.4+
+- **Segurança:** Spring Security + JWT
+- **Banco de Dados:** PostgreSQL (Neon)
+- **E-mail:** Resend API (HTTP-based delivery)
+- **Deploy:** Docker (Render Web Services)
 
-## ✨ Principais Funcionalidades
-- **Gestão de Contas Bancárias**: Controle do seu saldo em diferentes instituições financeiras (ex: Nubank, Caixa, PicPay) com isolamento completo de transações por perfil/conta.
-- **Leitor de Extratos via IA**: O sistema processa extratos em PDF utilizando o Gemini, vinculando automaticamente os dados à conta bancária selecionada no momento do upload.
-- **Exportação para Excel**: Geração instantânea de planilhas `.csv` filtradas por conta, separando corretamente os valores recebidos e pagos.
-- **Dashboard Dinâmico**: Painel interativo com filtros reativos por conta bancária, estatísticas isoladas e atualização de saldo em tempo real.
-- **Transações Parceladas**: Registro automático de projeções futuras de gastos através do cálculo de parcelas, integradas ao extrato da conta.
+---
 
-## 🛠️ Como Executar o Projeto Localmente
+## 🚀 Como Executar Localmente
 
-1. **Dependências Frontend**: 
-   Abra o terminal na raiz do projeto e instale os pacotes necessários:
+### Pré-requisitos
+- Node.js & npm
+- JDK 17+
+- Docker (opcional para rodar PostgreSQL local)
+
+### Configuração
+1. Clone o repositório.
+2. Na pasta `projeto/`, crie um arquivo `.env` com as seguintes chaves:
+   ```env
+   DB_PASSWORD=sua_senha_local
+   GEMINI_API_KEY=sua_chave_gemini
+   JWT_SECRET=sua_chave_secreta_jwt
+   RESEND_API_KEY=sua_chave_resend (opcional para local)
+   ```
+3. Instale as dependências do frontend:
    ```bash
    npm install
    ```
-
-2. **Banco de Dados**: 
-   Certifique-se de que o **PostgreSQL** está em execução na porta `5432` com o usuário `postgres` e que a database `Projeto01` foi previamente criada.
-
-3. **Configuração das Variáveis (.env)**: 
-   Crie um arquivo chamado `.env` na raiz do projeto e configure suas credenciais locais e de nuvem:
-   ```env
-   DB_PASSWORD=sua_senha_do_postgres_aqui
-   GEMINI_API_KEY=sua_chave_de_api_do_google_gemini_aqui
-   ```
-
-4. **Iniciando a Aplicação**: 
-   Execute o script de desenvolvimento que compila o frontend e o backend simultaneamente:
+4. Inicie o ambiente de desenvolvimento:
    ```bash
    npm run dev
    ```
-   * O Frontend estará acessível em: `http://localhost:4200`
-   * O Backend rodará internamente em: `http://localhost:8081`
 
 ---
-© 2026 FinanceSys. Todos os direitos reservados.
+
+## 🛡️ Hardening e Segurança (Auditado)
+O sistema passou por um processo de fortalecimento de segurança, incluindo:
+- Bloqueio de portas SMTP inseguras (migração para API HTTP).
+- Validação de tipos e tamanhos de arquivos em uploads (PDF max 10MB).
+- Remoção de segredos hardcoded e migração para Variáveis de Ambiente.
+- Implementação de limites de tentativas (*Rate Limiting*) para códigos de verificação.
+
+---
+© 2026 FinanceSys. Criado com foco em privacidade e inteligência financeira.
