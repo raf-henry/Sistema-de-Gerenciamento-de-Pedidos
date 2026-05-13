@@ -21,6 +21,7 @@ export class ContaService {
   
   // Signal para manter as contas sincronizadas em toda a aplicação
   contas = signal<Conta[]>([]);
+  selectedContaId = signal<number | null>(null);
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

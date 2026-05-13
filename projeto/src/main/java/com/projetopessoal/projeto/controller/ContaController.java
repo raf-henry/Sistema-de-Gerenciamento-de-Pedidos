@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import com.projetopessoal.projeto.dto.ContaRequest;
+import com.projetopessoal.projeto.config.InputSanitizer;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/contas")
@@ -23,15 +26,30 @@ public class ContaController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Retorna todas as contas vinculadas ao usuário autenticado.
+     */
     @GetMapping
     public List<Conta> getContas(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
         return contaRepository.findByUsuario(user);
     }
 
+    /**
+     * Cria uma nova conta bancária para o usuário autenticado.
+     * Sanitiza o nome e banco para evitar XSS e atribui cores padrão se necessário.
+     */
     @PostMapping
-    public ResponseEntity<?> criarConta(@RequestBody Conta conta, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> criarConta(@Valid @RequestBody ContaRequest contaDto, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        
+        Conta conta = new Conta();
+        // Sanitização (VULN-16)
+        conta.setNome(InputSanitizer.sanitize(contaDto.getNome()));
+        conta.setBanco(InputSanitizer.sanitize(contaDto.getBanco()));
+        conta.setTipo(contaDto.getTipo());
+        conta.setCor(contaDto.getCor());
+        conta.setIcone(contaDto.getIcone());
         conta.setUsuario(user);
         
         // Atribui cores padrões baseadas no banco se não enviadas ou vazias

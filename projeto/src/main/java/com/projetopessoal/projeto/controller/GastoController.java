@@ -18,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import com.projetopessoal.projeto.service.GeminiService;
+import com.projetopessoal.projeto.dto.GastoRequest;
+import com.projetopessoal.projeto.config.InputSanitizer;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/gastos")
@@ -38,6 +41,9 @@ public class GastoController {
     // Construtor padrão para o Spring
     public GastoController() {}
 
+    /**
+     * Busca a entidade User no banco com base no UserDetails do contexto de segurança.
+     */
     private User getAuthenticatedUser(UserDetails userDetails) {
         if (userDetails == null) {
             throw new RuntimeException("Sessão inválida.");
@@ -46,36 +52,32 @@ public class GastoController {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
     }
 
+
+
+    /**
+     * Cria um novo registro de gasto (ou receita). 
+     * Valida a conta associada para evitar IDOR e sanitiza a descrição para evitar XSS.
+     */
     @PostMapping
-    public ResponseEntity<?> criarGasto(@RequestBody Map<String, Object> payload, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> criarGasto(@Valid @RequestBody GastoRequest payload, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             User user = getAuthenticatedUser(userDetails);
             
-            String descricao = (String) payload.get("descricao");
-            Object valorObj = payload.get("valor");
-            String status = payload.getOrDefault("status", "Pago").toString();
-
-            if (descricao == null || valorObj == null) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Campos obrigatórios ausentes: descricao ou valor"));
-            }
-
             Gasto novoGasto = new Gasto();
-            novoGasto.setDescricao(descricao);
-            novoGasto.setValor(Double.parseDouble(valorObj.toString()));
-            novoGasto.setStatus(status);
-            novoGasto.setTipo(payload.getOrDefault("tipo", "DESPESA").toString());
+            // Sanitização (VULN-16)
+            novoGasto.setDescricao(InputSanitizer.sanitize(payload.getDescricao()));
+            // Tipagem forte do DTO evita NumberFormatException (VULN-13)
+            novoGasto.setValor(payload.getValor());
+            novoGasto.setStatus(payload.getStatus() != null ? payload.getStatus() : "Pago");
+            novoGasto.setTipo(payload.getTipo() != null ? payload.getTipo() : "DESPESA");
             
-            if ("Parcelado".equalsIgnoreCase(status)) {
-                if (payload.containsKey("numeroParcelas")) {
-                    novoGasto.setNumeroParcelas(Integer.parseInt(payload.get("numeroParcelas").toString()));
-                }
-                if (payload.containsKey("valorParcela")) {
-                    novoGasto.setValorParcela(Double.parseDouble(payload.get("valorParcela").toString()));
-                }
+            if ("Parcelado".equalsIgnoreCase(novoGasto.getStatus())) {
+                novoGasto.setNumeroParcelas(payload.getNumeroParcelas() != null ? payload.getNumeroParcelas() : 1);
+                novoGasto.setValorParcela(payload.getValorParcela() != null ? payload.getValorParcela() : payload.getValor());
             }
 
-            if (payload.containsKey("contaId") && payload.get("contaId") != null) {
-                Long contaId = Long.parseLong(payload.get("contaId").toString());
+            if (payload.getContaId() != null) {
+                Long contaId = payload.getContaId();
                 Conta conta = contaRepository.findById(contaId).orElse(null);
                 
                 // Correção de Vulnerabilidade IDOR: Verifica se a conta pertence ao usuário
@@ -136,22 +138,22 @@ public class GastoController {
                 Gasto novoGasto = new Gasto();
                 novoGasto.setUsuario(user);
                 novoGasto.setConta(conta);
-                novoGasto.setDescricao((String) dado.get("descricao"));
+                novoGasto.setDescricao(InputSanitizer.sanitize((String) dado.get("descricao")));
                 
                 if (dado.containsKey("tipo")) {
-                    novoGasto.setTipo((String) dado.get("tipo"));
+                    novoGasto.setTipo(InputSanitizer.sanitize((String) dado.get("tipo")));
                 }
                 if (dado.containsKey("nrDoc")) {
-                    novoGasto.setNrDoc((String) dado.get("nrDoc"));
+                    novoGasto.setNrDoc(InputSanitizer.sanitize((String) dado.get("nrDoc")));
                 }
                 if (dado.containsKey("favorecido")) {
-                    novoGasto.setFavorecido((String) dado.get("favorecido"));
+                    novoGasto.setFavorecido(InputSanitizer.sanitize((String) dado.get("favorecido")));
                 }
                 if (dado.containsKey("cpfCnpj")) {
-                    novoGasto.setCpfCnpj((String) dado.get("cpfCnpj"));
+                    novoGasto.setCpfCnpj(InputSanitizer.sanitize((String) dado.get("cpfCnpj")));
                 }
                 if (dado.containsKey("categoria")) {
-                    novoGasto.setCategoria((String) dado.get("categoria"));
+                    novoGasto.setCategoria(InputSanitizer.sanitize((String) dado.get("categoria")));
                 } else {
                     novoGasto.setCategoria("Outros");
                 }
@@ -193,6 +195,10 @@ public class GastoController {
     }
 
 
+    /**
+     * Retorna a lista de transações (gastos/receitas) do usuário.
+     * Pode ser filtrada por contaId via Query Parameter.
+     */
     @GetMapping
     public ResponseEntity<?> getGastos(@RequestParam(required = false) Long contaId, @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
