@@ -50,9 +50,8 @@ public class AuthController {
         cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
-        // SameSite=Strict via header because Cookie class doesn't support it directly in older versions
-        response.addCookie(cookie);
-        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; %s SameSite=Strict", 
+        // SameSite=None + Secure é necessário para que cookies funcionem entre domínios diferentes (ex: localhost -> Render)
+        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; %s SameSite=None", 
             name, value, maxAge, cookieSecure ? "Secure;" : ""));
     }
 

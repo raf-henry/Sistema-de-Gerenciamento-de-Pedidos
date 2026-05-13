@@ -38,16 +38,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                .ignoringRequestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/send-code", "/api/auth/refresh")
-            )
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // Apenas endpoints estritamente públicos (login, registro, envio de código)
-                // NOTA: /api/auth/check-email, /change-password e /change-email requerem autenticação
-                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/send-code", "/api/auth/refresh").permitAll()
+                .requestMatchers("/api/auth/**").permitAll() // Permite login, register, etc.
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
