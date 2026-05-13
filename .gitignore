@@ -38,6 +38,8 @@ desktop.ini
 
 # AI Agent tooling (Gemini, Copilot, etc.)
 .agents/
+brain/
+.scratch/
 skills-lock.json
 
 # Stitch design prototypes (não fazem parte do app)
