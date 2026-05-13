@@ -24,7 +24,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final VerificationService verificationService;
-    
+
     @Value("${cookie.secure:true}")
     private boolean cookieSecure;
 
@@ -37,7 +37,8 @@ public class AuthController {
     private static final int MAX_ATTEMPTS = 5;
     private static final long LOCK_TIME = 15 * 60 * 1000; // 15 minutos
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, VerificationService verificationService) {
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils,
+            VerificationService verificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
@@ -50,14 +51,15 @@ public class AuthController {
         cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
-        // SameSite=None + Secure é necessário para que cookies funcionem entre domínios diferentes (ex: localhost -> Render)
-        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; %s SameSite=None", 
-            name, value, maxAge, cookieSecure ? "Secure;" : ""));
+        // Para SameSite=None funcionar entre domínios (Local -> Render), o atributo Secure é OBRIGATÓRIO.
+        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=None", 
+            name, value, maxAge));
     }
 
     /**
      * Autentica um usuário, gera tokens JWT e os armazena em cookies HttpOnly.
-     * Implementa proteção contra Brute Force via Rate Limiting e limpa tentativas após sucesso.
+     * Implementa proteção contra Brute Force via Rate Limiting e limpa tentativas
+     * após sucesso.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest credentials, HttpServletResponse response) {
@@ -66,7 +68,8 @@ public class AuthController {
 
         // Verificação de Rate Limit
         if (isLocked(email)) {
-            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
+            return ResponseEntity.status(429)
+                    .body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
         }
 
         Optional<User> userOpt = userRepository.findByUsername(email);
@@ -83,11 +86,10 @@ public class AuthController {
 
                 return ResponseEntity.ok(Map.of(
                         "username", user.getUsername(),
-                        "message", "Login successful"
-                ));
+                        "message", "Login successful"));
             }
         }
-        
+
         registerAttempt(email);
         return ResponseEntity.status(401).body(Map.of("error", "Credenciais inválidas"));
     }
@@ -117,8 +119,10 @@ public class AuthController {
     }
 
     /**
-     * Gera um código de verificação de 6 dígitos e o "envia" para o e-mail do usuário.
-     * Em modo portfólio, o código é retornado na resposta (demoCode) para permitir o teste sem e-mail real.
+     * Gera um código de verificação de 6 dígitos e o "envia" para o e-mail do
+     * usuário.
+     * Em modo portfólio, o código é retornado na resposta (demoCode) para permitir
+     * o teste sem e-mail real.
      */
     @PostMapping("/send-code")
     public ResponseEntity<?> sendCode(@RequestBody Map<String, String> request) {
@@ -126,29 +130,31 @@ public class AuthController {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "E-mail inválido."));
         }
-        
+
         // Verificação de Rate Limit
         if (isLocked(email)) {
-            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
+            return ResponseEntity.status(429)
+                    .body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
         }
 
         if (userRepository.findByUsername(email).isPresent()) {
-            // No modo portfólio, vamos ser explícitos se o e-mail já existe para facilitar o teste
+            // No modo portfólio, vamos ser explícitos se o e-mail já existe para facilitar
+            // o teste
             return ResponseEntity.badRequest().body(Map.of("error", "Este e-mail já está cadastrado."));
         }
-        
+
         String code = verificationService.generateAndSendCode(email);
-        
+
         // Retorna o código na resposta para facilitar demonstração em portfólio
         return ResponseEntity.ok(Map.of(
-            "message", "Código gerado com sucesso!",
-            "demoCode", code
-        ));
+                "message", "Código gerado com sucesso!",
+                "demoCode", code));
     }
 
     /**
      * Cria um novo usuário no sistema após validar o código de verificação enviado.
-     * Após o registro bem-sucedido, o usuário é automaticamente autenticado via cookies.
+     * Após o registro bem-sucedido, o usuário é automaticamente autenticado via
+     * cookies.
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest userData, HttpServletResponse response) {
@@ -158,7 +164,8 @@ public class AuthController {
 
         // Verificação de Rate Limit
         if (isLocked(email)) {
-            return ResponseEntity.status(429).body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
+            return ResponseEntity.status(429)
+                    .body(Map.of("error", "Muitas tentativas. Tente novamente em 15 minutos."));
         }
 
         if (userRepository.findByUsername(email).isPresent()) {
@@ -177,22 +184,21 @@ public class AuthController {
         newUser.setTokenVersion(0);
 
         User savedUser = userRepository.save(newUser);
-        
+
         String token = jwtUtils.generateToken(savedUser);
         String refreshToken = jwtUtils.generateRefreshToken(savedUser);
 
         addCookie(response, "access_token", token, ACCESS_TOKEN_EXPIRY);
         addCookie(response, "refresh_token", refreshToken, REFRESH_TOKEN_EXPIRY);
-        
+
         return ResponseEntity.ok(Map.of(
-            "message", "Usuário registrado e autenticado com sucesso!",
-            "username", savedUser.getUsername()
-        ));
+                "message", "Usuário registrado e autenticado com sucesso!",
+                "username", savedUser.getUsername()));
     }
 
     @PutMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String authHeader,
-                                            @Valid @RequestBody ChangePasswordRequest body) {
+            @Valid @RequestBody ChangePasswordRequest body) {
         String currentPassword = body.getCurrentPassword();
         String newPassword = body.getNewPassword();
 
@@ -213,12 +219,13 @@ public class AuthController {
         // Incrementa a versão do token para invalidar o token atual (VULN-05)
         user.setTokenVersion(user.getTokenVersion() + 1);
         userRepository.save(user);
-        return ResponseEntity.ok(Map.of("message", "Senha alterada com sucesso! Todos os outros dispositivos foram desconectados."));
+        return ResponseEntity
+                .ok(Map.of("message", "Senha alterada com sucesso! Todos os outros dispositivos foram desconectados."));
     }
 
     @PutMapping("/change-email")
     public ResponseEntity<?> changeEmail(@RequestHeader("Authorization") String authHeader,
-                                         @Valid @RequestBody ChangeEmailRequest body) {
+            @Valid @RequestBody ChangeEmailRequest body) {
         String currentPassword = body.getCurrentPassword();
         String newEmail = body.getNewEmail();
 
@@ -250,29 +257,31 @@ public class AuthController {
                 "message", "E-mail alterado com sucesso!",
                 "token", newToken,
                 "refreshToken", newRefreshToken,
-                "username", newEmail
-        ));
+                "username", newEmail));
     }
 
     /**
      * Renova o access_token e o refresh_token utilizando um refresh_token válido.
-     * Permite que a sessão do usuário permaneça ativa sem necessidade de novo login manual.
+     * Permite que a sessão do usuário permaneça ativa sem necessidade de novo login
+     * manual.
      */
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> request, HttpServletResponse response) {
         String refreshToken = request.get("refreshToken");
-        
+
         // Se não vier no body, tenta pegar do cookie
         if (refreshToken == null && response != null) {
-            // Requer HttpServletRequest para ler cookies, mas aqui vamos simplificar 
+            // Requer HttpServletRequest para ler cookies, mas aqui vamos simplificar
             // e assumir que o frontend pode enviar via body ou o filter já validaria.
             // Para ser robusto, vamos buscar no request se disponível.
         }
 
         try {
-            // ... (lógica simplificada para brevidade, assumindo que pegamos do body por enquanto)
-            if (refreshToken == null) return ResponseEntity.badRequest().body(Map.of("error", "Refresh token missing"));
-            
+            // ... (lógica simplificada para brevidade, assumindo que pegamos do body por
+            // enquanto)
+            if (refreshToken == null)
+                return ResponseEntity.badRequest().body(Map.of("error", "Refresh token missing"));
+
             String username = jwtUtils.extractUsername(refreshToken);
             Optional<User> userOpt = userRepository.findByUsername(username);
             if (userOpt.isPresent() && jwtUtils.validateToken(refreshToken, userOpt.get())) {
@@ -285,7 +294,8 @@ public class AuthController {
 
                 return ResponseEntity.ok(Map.of("status", "Refreshed"));
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return ResponseEntity.status(401).body(Map.of("error", "Invalid refresh token"));
     }
 
@@ -300,11 +310,12 @@ public class AuthController {
     }
 
     /**
-     * Retorna os dados do usuário atualmente autenticado com base no contexto de segurança do Spring.
+     * Retorna os dados do usuário atualmente autenticado com base no contexto de
+     * segurança do Spring.
      */
     @GetMapping("/me")
-    public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String authHeader, 
-                                jakarta.servlet.http.HttpServletRequest request) {
+    public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String authHeader,
+            jakarta.servlet.http.HttpServletRequest request) {
         // O Filter já validou o token e colocou no SecurityContext se válido
         var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal().toString())) {
@@ -313,7 +324,8 @@ public class AuthController {
         return ResponseEntity.status(401).body(Map.of("error", "Not authenticated"));
     }
 
-    // VULN-14: Endpoint de verificação de e-mail agora requer autenticação (protegido pelo filtro JWT)
+    // VULN-14: Endpoint de verificação de e-mail agora requer autenticação
+    // (protegido pelo filtro JWT)
     @GetMapping("/check-email")
     public ResponseEntity<?> checkEmail(@RequestParam String email, @RequestHeader("Authorization") String authHeader) {
         // Apenas usuários autenticados podem verificar se um e-mail existe
