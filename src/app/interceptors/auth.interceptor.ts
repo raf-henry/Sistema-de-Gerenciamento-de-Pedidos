@@ -3,28 +3,21 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap, catchError, throwError } from 'rxjs';
 
+/**
+ * Interceptor responsável por adicionar 'withCredentials: true' em todas as requisições,
+ * permitindo o envio automático de cookies HttpOnly, e redirecionar para login em caso de 401.
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Ignora requisições de login e registro para não enviar token inválido
-  if (req.url.includes('/api/auth/')) {
-    return next(req);
-  }
+  // Adiciona withCredentials: true para todas as requisições (necessário para cookies HttpOnly)
+  const authReq = req.clone({
+    withCredentials: true
+  });
 
-  const token = localStorage.getItem('auth_token');
-
-  let request = req;
-  if (token && token !== 'undefined' && token !== 'null') {
-    request = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
-    });
-  }
-
-  return next(request).pipe(
+  return next(authReq).pipe(
     catchError((error) => {
-      // Se o backend retornar 401 (token inválido/expirado), limpa o storage e redireciona
+      // Se o backend retornar 401 (não autorizado/cookie expirado)
       if (error.status === 401) {
-        localStorage.removeItem('auth_token');
         localStorage.removeItem('username');
-        // Redireciona para login apenas se não estiver já na página de login
         if (!window.location.pathname.includes('/login')) {
           window.location.href = '/login';
         }

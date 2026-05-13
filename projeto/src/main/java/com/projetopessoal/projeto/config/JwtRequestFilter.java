@@ -18,10 +18,14 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService;
+    private final com.projetopessoal.projeto.repository.UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
-    public JwtRequestFilter(CustomUserDetailsService userDetailsService, JwtUtils jwtUtils) {
+    public JwtRequestFilter(com.projetopessoal.projeto.service.CustomUserDetailsService userDetailsService, 
+                            com.projetopessoal.projeto.repository.UserRepository userRepository, 
+                            JwtUtils jwtUtils) {
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -36,23 +40,36 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
+        } else if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                if ("access_token".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwt != null) {
             try {
                 username = jwtUtils.extractUsername(jwt);
             } catch (Exception e) {
-                // Token inválido ou malformado - silenciosamente ignorado
+                // Token inválido ou malformado
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            final String finalUsername = username;
+            com.projetopessoal.projeto.model.User user = this.userRepository.findByUsername(finalUsername).orElse(null);
 
-            if (jwtUtils.validateToken(jwt, userDetails)) {
+            String typ = jwtUtils.extractClaim(jwt, claims -> (String) claims.get("typ"));
+
+            if (user != null && "access".equals(typ) && jwtUtils.validateToken(jwt, user)) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } else {
             }
         }
         

@@ -22,6 +22,9 @@ public class VerificationService {
         this.emailService = emailService;
     }
 
+    /**
+     * Gera um código de 6 dígitos, armazena no cache com expiração e "envia" via e-mail (log).
+     */
     public String generateAndSendCode(String email) {
         // Gera um código de 6 dígitos com SecureRandom
         String code = String.format("%06d", SECURE_RANDOM.nextInt(1000000));
@@ -35,6 +38,10 @@ public class VerificationService {
         return code;
     }
 
+    /**
+     * Valida se o código fornecido pelo usuário coincide com o código armazenado e ainda válido.
+     * Implementa proteção contra expiração e limite de tentativas.
+     */
     public boolean verifyCode(String email, String code) {
         CodeEntry entry = verificationCodes.get(email);
         

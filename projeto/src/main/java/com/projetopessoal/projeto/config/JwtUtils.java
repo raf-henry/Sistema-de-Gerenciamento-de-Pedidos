@@ -18,9 +18,10 @@ import java.util.function.Function;
 public class JwtUtils {
 
     private final Key key;
-    private final long expirationTime = 1000 * 60 * 60 * 10; // 10 horas
+    private final long accessExpiration = 1000 * 60 * 60 * 2; // 2 horas
+    private final long refreshExpiration = 1000 * 60 * 60 * 24 * 7; // 7 dias
 
-    public JwtUtils(@Value("${JWT_SECRET:chave_padrao_muito_longa_e_aleatoria_que_deve_ser_trocada_em_producao_1234567890}") String secretKey) {
+    public JwtUtils(@Value("${JWT_SECRET}") String secretKey) {
         // Garante que a chave tem pelo menos 256 bits (32 bytes) para HMAC-SHA256
         byte[] keyBytes = secretKey.getBytes();
         if (keyBytes.length < 32) {
@@ -29,25 +30,47 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username) {
+    /**
+     * Gera um Access Token (curta duração) para o usuário, incluindo a versão do token.
+     */
+    public String generateToken(com.projetopessoal.projeto.model.User user) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        claims.put("ver", user.getTokenVersion());
+        claims.put("typ", "access");
+        return createToken(claims, user.getUsername(), accessExpiration);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    /**
+     * Gera um Refresh Token (longa duração) para o usuário, incluindo a versão do token.
+     */
+    public String generateRefreshToken(com.projetopessoal.projeto.model.User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("ver", user.getTokenVersion());
+        claims.put("typ", "refresh");
+        return createToken(claims, user.getUsername(), refreshExpiration);
+    }
+
+    private String createToken(Map<String, Object> claims, String subject, long expiration) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    /**
+     * Valida o token comparando o username e a versão do token com os dados atuais do banco.
+     */
+    public Boolean validateToken(String token, com.projetopessoal.projeto.model.User user) {
         final String username = extractUsername(token);
-        // Comparação case-sensitive e sem espaços extras para evitar bypass
-        return (username.trim().equals(userDetails.getUsername().trim()) && !isTokenExpired(token));
+        final Integer version = extractClaim(token, claims -> claims.get("ver", Integer.class));
+        
+        // Comparação case-sensitive, verifica versão e expiração
+        return (username.trim().equals(user.getUsername().trim()) && 
+                version != null && version.equals(user.getTokenVersion()) && 
+                !isTokenExpired(token));
     }
 
     public String extractUsername(String token) {
