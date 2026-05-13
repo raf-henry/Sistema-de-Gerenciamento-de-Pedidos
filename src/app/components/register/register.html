@@ -37,8 +37,21 @@
             <span class="text-[10px] font-bold uppercase tracking-widest">Senha</span>
           </div>
           <input type="password" id="password" name="password" [(ngModel)]="registerData.password" 
-            class="w-full px-4 py-3 mb-1 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
-            placeholder="Crie uma senha" required [disabled]="isLoading()">
+            class="w-full px-4 py-3 bg-surface-container-low border border-transparent focus:border-primary rounded-2xl outline-none transition-all text-sm font-medium" 
+            placeholder="Ex: Senha@123" required [disabled]="isLoading()">
+          
+          <ul class="mt-2 space-y-1 ml-1">
+            <li class="flex items-center gap-2 text-[9px] transition-colors duration-300" 
+                [class.text-secondary]="checkMinLength()" [class.text-error]="!checkMinLength()">
+              <span class="material-symbols-outlined text-[10px]">fiber_manual_record</span>
+              Mínimo de 8 caracteres
+            </li>
+            <li class="flex items-center gap-2 text-[9px] transition-colors duration-300" 
+                [class.text-secondary]="checkNumberSymbol()" [class.text-error]="!checkNumberSymbol()">
+              <span class="material-symbols-outlined text-[10px]">fiber_manual_record</span>
+              Pelo menos um número e um símbolo (@$!%*?&)
+            </li>
+          </ul>
         </div>
 
         <div class="flex flex-col gap-1.5">
@@ -87,12 +100,10 @@
           </p>
 
           @if (demoCode()) {
-            <div class="mt-4 p-4 bg-primary/5 border border-primary/20 rounded-2xl animate-fade-up">
-              <p class="text-[10px] uppercase font-bold tracking-widest text-primary mb-1">Modo de Demonstração</p>
-              <p class="text-sm text-on-surface-variant">
-                Para fins de teste, utilize o código abaixo para validar seu acesso:
-              </p>
-              <p class="text-2xl font-black text-primary mt-1 tracking-widest">{{ demoCode() }}</p>
+            <div class="mt-4 p-4 bg-primary/10 border-2 border-primary rounded-2xl animate-fade-up">
+              <p class="text-[10px] uppercase tracking-widest font-extrabold text-primary mb-1">CÓDIGO DE TESTE (PORTFÓLIO)</p>
+              <p class="text-3xl font-mono font-black tracking-[0.3em] text-primary">{{ demoCode() }}</p>
+              <p class="text-[10px] text-on-surface-variant mt-1 font-medium italic">Copie este código para validar seu cadastro.</p>
             </div>
           }
         </div>

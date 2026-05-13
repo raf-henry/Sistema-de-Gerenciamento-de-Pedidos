@@ -24,10 +24,54 @@ export class Transacoes implements OnInit {
   userName = localStorage.getItem('username') || 'Usuário';
   transacoes = signal<any[]>([]);
   contas = signal<any[]>([]);
-  contaSelecionadaId: number | null = null;
+  
+  get contaSelecionadaId() {
+    return this.contaService.selectedContaId();
+  }
+  
+  set contaSelecionadaId(val: any) {
+    const id = (val === 'null' || val === null) ? null : Number(val);
+    this.contaService.selectedContaId.set(id);
+  }
+
   categoriaSelecionada = signal<string>('Todas');
   dataInicio = signal<string>('');
   dataFim = signal<string>('');
+
+  currentBank = computed(() => {
+    const selectedId = this.contaSelecionadaId;
+    if (!selectedId) return 'GERAL';
+    const conta = this.contas().find(c => c.id === Number(selectedId));
+    return conta?.banco?.toUpperCase() || 'GERAL';
+  });
+
+  saldoTotal = computed(() => {
+    const list = this.transacoesFiltradas();
+    const allContas = this.contas();
+    const selectedId = this.contaSelecionadaId;
+
+    if (selectedId) {
+      // Pega o saldo do lançamento mais recente da conta selecionada (dentro do filtro)
+      const gastosDaConta = list
+        .filter(t => (t.contaId === Number(selectedId) || t.conta?.id === Number(selectedId)))
+        .sort((a, b) => new Date(b.dataGasto).getTime() - new Date(a.dataGasto).getTime());
+      
+      return gastosDaConta.length > 0 ? (gastosDaConta[0].saldo || 0) : 0;
+    } else {
+      // Soma o saldo mais recente de cada conta
+      let total = 0;
+      allContas.forEach(conta => {
+        const gastosDaConta = list
+          .filter(t => (t.contaId === conta.id || t.conta?.id === conta.id))
+          .sort((a, b) => new Date(b.dataGasto).getTime() - new Date(a.dataGasto).getTime());
+        
+        if (gastosDaConta.length > 0) {
+          total += (gastosDaConta[0].saldo || 0);
+        }
+      });
+      return total;
+    }
+  });
 
   transacoesFiltradas = computed(() => {
     let list = this.transacoes();
@@ -71,13 +115,21 @@ export class Transacoes implements OnInit {
   ngOnInit() {
     this.userName = localStorage.getItem('username') || 'Usuário';
     this.loadContas();
-    this.loadTransacoes();
   }
 
   loadContas() {
     this.contaService.getContas().subscribe({
-      next: (res) => this.contas.set(res),
-      error: (err) => console.error('Erro ao carregar contas:', err)
+      next: (res) => {
+        this.contas.set(res);
+        if (this.contaSelecionadaId === null && res.length > 0) {
+          this.contaSelecionadaId = res[0].id ?? null;
+        }
+        this.loadTransacoes();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar contas:', err);
+        this.loadTransacoes();
+      }
     });
   }
 

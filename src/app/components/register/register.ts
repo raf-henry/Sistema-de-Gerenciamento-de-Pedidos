@@ -27,6 +27,21 @@ export class Register {
     confirmPassword: ''
   };
 
+  /**
+   * Verifica se a senha tem o tamanho mínimo de 8 caracteres.
+   */
+  checkMinLength(): boolean {
+    return this.registerData.password.length >= 8;
+  }
+
+  /**
+   * Verifica se a senha possui ao menos um número e um símbolo.
+   */
+  checkNumberSymbol(): boolean {
+    const p = this.registerData.password;
+    return /\d/.test(p) && /[@$!%*?&]/.test(p);
+  }
+
   sendCode() {
     if (!this.registerData.email || !this.registerData.password) {
       this.errorMessage.set('Preencha todos os campos.');
@@ -39,8 +54,10 @@ export class Register {
       return;
     }
 
-    if (this.registerData.password.length < 8) {
-      this.errorMessage.set('A senha deve ter pelo menos 8 caracteres.');
+    // Validação de senha simplificada (deve coincidir com o Backend)
+    const passwordPattern = /^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordPattern.test(this.registerData.password)) {
+      this.errorMessage.set('A senha deve ter pelo menos 8 caracteres, incluindo um número e um caractere especial (@$!%*?&).');
       return;
     }
 
@@ -51,14 +68,13 @@ export class Register {
     
     this.isLoading.set(true);
     this.errorMessage.set('');
-    this.demoCode.set('');
-    console.log('Enviando código para:', this.registerData.email);
     
     this.authService.sendVerificationCode(this.registerData.email).subscribe({
       next: (res: any) => {
-        console.log('Sucesso ao enviar código:', res);
+        console.log('Resposta do servidor (send-code):', res);
         if (res.demoCode) {
           this.demoCode.set(res.demoCode);
+          console.log('Código de demonstração definido:', res.demoCode);
         }
         this.isModalOpen.set(true);
         this.isLoading.set(false);
@@ -80,13 +96,11 @@ export class Register {
     
     this.authService.register({ email, password, code }).subscribe({
       next: (response) => {
-        console.log('Registro concluído:', response);
         this.isModalOpen.set(false);
         alert('Cadastro realizado e autenticado com sucesso!');
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        console.error('Erro no registro:', err);
         this.errorMessage.set(err.error?.error || 'Código inválido. Verifique e tente novamente.');
         this.isLoading.set(false);
       }

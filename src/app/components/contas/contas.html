@@ -95,9 +95,13 @@
       <div class="flex items-center">
         <h2 class="text-xl font-bold tracking-tight text-on-surface">Contas</h2>
       </div>
-      <div class="flex items-center">
-        <span class="text-sm text-on-surface-variant">Olá, <strong class="text-primary font-bold">{{ userName
-            }}</strong></span>
+      <div class="flex items-center gap-4">
+        <div class="flex flex-col items-end">
+          <span class="text-sm font-bold text-on-surface">{{ userName }}</span>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary font-black animate-fade-in shadow-sm select-none">
+          {{ userName.charAt(0).toUpperCase() }}
+        </div>
       </div>
     </header>
 
@@ -158,7 +162,7 @@
           </section>
           <!-- Bank Accounts Grid -->
           <section>
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ">
               <h3 class="text-2xl font-bold text-primary">Contas Bancárias</h3>
               <button class="text-secondary text-sm font-medium flex items-center gap-1 hover:underline">
                 Ver todas
@@ -167,7 +171,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div *ngFor="let banco of bancos()"
-                class="bg-white rounded-3xl premium-shadow p-8 border border-outline-variant hover:border-primary/30 transition-all duration-300 animate-slide-up stagger-2 group">
+                class="bg-white rounded-3xl premium-shadow p-8 border border-outline-variant hover:border-primary/30 transition-all duration-300 animate-slide-up stagger-2 group rounded-xl shadow-sm p-6 border border-outline-variant">
                 <div class="flex justify-between items-start mb-8">
                   <div class="flex items-center gap-4">
                     <div

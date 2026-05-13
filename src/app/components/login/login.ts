@@ -23,11 +23,10 @@ export class Login {
   onSubmit() {
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
-        console.log('Login bem-sucedido', response);
         this.router.navigate(['/home']);
       },
       error: (err) => {
-        console.error('Erro no login', err);
+        console.error('Erro no login');
         alert('Falha ao autenticar. Verifique suas credenciais.');
       }
     });

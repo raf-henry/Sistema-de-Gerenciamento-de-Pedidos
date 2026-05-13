@@ -6,7 +6,7 @@
   --font-manrope: "Manrope", sans-serif;
   
   /* Premium SaaS Design System */
-  --color-primary: #0F172A; /* Slate 900 for a softer black */
+  --color-primary: #0F172A; /* Slate 900 */
   --color-on-primary: #ffffff;
   --color-primary-container: #1E293B;
   --color-on-primary-container: #94A3B8;
@@ -24,7 +24,7 @@
   --color-error-container: #FEE2E2;
   --color-on-error-container: #991B1B;
   
-  --color-background: #F8FAFC; /* Slate 50 - softer than flat gray */
+  --color-background: #F8FAFC;
   --color-on-background: #0F172A;
   
   --color-surface: #ffffff;
@@ -39,7 +39,30 @@
   --color-surface-container-highest: #CBD5E1;
   
   --color-outline: #94A3B8;
-  --color-outline-variant: #E2E8F0; /* Much softer borders */
+  --color-outline-variant: #E2E8F0;
+
+  /* Custom Animations */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
 }
 
 @layer base {
@@ -47,6 +70,29 @@
     @apply bg-background text-on-background antialiased;
     font-family: "Manrope", sans-serif;
   }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-primary/80 backdrop-blur-md border border-white/10;
+  }
+
+  .premium-shadow {
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5;
+  }
+
+  .stagger-1 { animation-delay: 100ms; }
+  .stagger-2 { animation-delay: 200ms; }
+  .stagger-3 { animation-delay: 300ms; }
+  .stagger-4 { animation-delay: 400ms; }
 }
 
 /* Material Symbols - Suporte Global */

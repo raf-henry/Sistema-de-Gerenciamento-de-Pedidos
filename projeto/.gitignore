@@ -35,3 +35,7 @@ build/
 # Custom Local Properties
 src/main/resources/application-dev.properties
 
+# Secrets and environment
+.env
+.env.*
+

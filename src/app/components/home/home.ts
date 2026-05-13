@@ -23,7 +23,16 @@ export class Home implements OnInit {
 
   expenses = signal<any[]>([]);
   contas = signal<any[]>([]);
-  contaSelecionadaId: number | null = null;
+  
+  get contaSelecionadaId() {
+    return this.contaService.selectedContaId();
+  }
+  
+  set contaSelecionadaId(val: any) {
+    // Garante que o valor seja número ou null
+    const id = (val === 'null' || val === null) ? null : Number(val);
+    this.contaService.selectedContaId.set(id);
+  }
 
   totalEntradas = computed(() => {
     return this.expenses()
@@ -41,6 +50,41 @@ export class Home implements OnInit {
     totalGastos: 0,
     valorTotal: 0,
     gastoFixoMensal: 0
+  });
+
+  saldoAtual = computed(() => {
+    const allExpenses = this.expenses();
+    const allContas = this.contas();
+    const selectedId = this.contaSelecionadaId;
+
+    if (selectedId) {
+      // Para uma conta específica: pega o saldo do lançamento mais recente
+      const gastosDaConta = allExpenses
+        .filter(g => (g.contaId === Number(selectedId) || g.conta?.id === Number(selectedId)))
+        .sort((a, b) => new Date(b.dataGasto).getTime() - new Date(a.dataGasto).getTime());
+      
+      return gastosDaConta.length > 0 ? (gastosDaConta[0].saldo || 0) : 0;
+    } else {
+      // Para todas as contas: soma o último saldo de cada conta existente
+      let total = 0;
+      allContas.forEach(conta => {
+        const gastosDaConta = allExpenses
+          .filter(g => (g.contaId === conta.id || g.conta?.id === conta.id))
+          .sort((a, b) => new Date(b.dataGasto).getTime() - new Date(a.dataGasto).getTime());
+        
+        if (gastosDaConta.length > 0) {
+          total += (gastosDaConta[0].saldo || 0);
+        }
+      });
+      return total;
+    }
+  });
+
+  currentBank = computed(() => {
+    const selectedId = this.contaSelecionadaId;
+    if (!selectedId) return 'GERAL';
+    const conta = this.contas().find(c => c.id === Number(selectedId));
+    return conta?.banco?.toUpperCase() || 'GERAL';
   });
 
   isUploadingExtrato = signal(false);
@@ -62,13 +106,19 @@ export class Home implements OnInit {
   };
 
   ngOnInit() {
-    this.loadDashboardData();
     this.contaService.getContas().subscribe({
       next: (data: any) => {
         this.contas.set(data);
-        if (data.length > 0) {
+        // Se já existe uma conta selecionada no serviço (vinda de outra tela), mantém.
+        // Caso contrário, tenta selecionar a primeira conta.
+        if (this.contaSelecionadaId === null && data.length > 0) {
           this.contaSelecionadaId = data[0].id ?? null;
         }
+        this.loadDashboardData();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar contas:', err);
+        this.loadDashboardData();
       }
     });
   }

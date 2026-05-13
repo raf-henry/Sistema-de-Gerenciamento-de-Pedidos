@@ -97,7 +97,7 @@
   <!-- MAIN AREA -->
   <div class="flex-1 flex flex-col min-w-0">
     <!-- HEADER -->
-    <header class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex justify-between items-center sticky top-0 z-10 h-[73px]">
+    <header class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex justify-between items-center sticky top-0 z-50 h-[73px]">
       <div class="flex items-center">
         <h2 class="text-xl font-bold tracking-tight text-on-surface">Transações</h2>
       </div>
@@ -109,7 +109,14 @@
         <button class="p-2 hover:bg-surface-container-low rounded-full transition-transform active:scale-95">
           <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
         </button>
-        <span class="text-sm text-on-surface-variant ml-2">Olá, <strong class="text-primary font-bold">{{ userName }}</strong></span>
+        <div class="flex items-center gap-4">
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-bold text-on-surface">{{ userName }}</span>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary font-black animate-fade-in shadow-sm select-none">
+            {{ userName.charAt(0).toUpperCase() }}
+          </div>
+        </div>
       </div>
     </header>
 
@@ -170,7 +177,34 @@
           </div>
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-outline-variant">
-              <thead class="bg-surface-container/50">
+              <!-- HEADER: CAIXA -->
+              <thead *ngIf="currentBank() === 'CAIXA'" class="bg-surface-container/50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Lançamentos</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Nr. Doc</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Histórico/Complemento</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Favorecido</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">CPF/CNPJ</th>
+                  <th class="px-6 py-4 text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Valor (R$)</th>
+                  <th class="px-6 py-4 text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Saldo (R$)</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ações</th>
+                </tr>
+              </thead>
+
+              <!-- HEADER: PICPAY -->
+              <thead *ngIf="currentBank() === 'PICPAY'" class="bg-surface-container/50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Data/Hora</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Tipo</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Origem/Destino</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Forma de Pagamento</th>
+                  <th class="px-6 py-4 text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Valor (R$)</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ações</th>
+                </tr>
+              </thead>
+
+              <!-- HEADER: DEFAULT -->
+              <thead *ngIf="currentBank() !== 'CAIXA' && currentBank() !== 'PICPAY'" class="bg-surface-container/50">
                 <tr>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">ID</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">DESCRIÇÃO / FAVORECIDO</th>
@@ -178,40 +212,73 @@
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Nº DOC</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">DATA</th>
                   <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">STATUS</th>
-                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">VALOR (R$)</th>
-                  <th class="px-6 py-4 text-left text-xs font-semibold text-on-surface-variant uppercase tracking-wider">AÇÕES</th>
+                  <th class="px-6 py-4 text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">VALOR (R$)</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-on-surface-variant uppercase tracking-wider">AÇÕES</th>
                 </tr>
               </thead>
+
               <tbody class="divide-y divide-outline-variant/50">
                 <tr *ngFor="let t of transacoesFiltradas()" class="hover:bg-surface-container-low transition-colors">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">#{{ t.id }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-on-surface">
-                    {{ t.descricao }}
-                    <div *ngIf="t.favorecido" class="text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-tight mt-0.5">
-                      {{ t.favorecido }} <span *ngIf="t.cpfCnpj">({{ t.cpfCnpj }})</span>
-                    </div>
-                    <div *ngIf="t.status === 'Parcelado'" class="text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-tight mt-0.5">
-                      {{ t.numeroParcelas }}x de R$ {{ t.valorParcela | number:'1.2-2' }}
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container border border-outline-variant">
-                      {{ t.categoria || 'Outros' }}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.nrDoc || '-' }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span 
-                      [ngClass]="t.tipo === 'RECEITA' ? 'bg-secondary-container/50 text-[#0a7a3b]' : 'bg-error-container/50 text-error'"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                      {{ t.tipo === 'RECEITA' ? 'Recebido' : (t.status === 'Parcelado' ? 'Parcelado' : 'Pago') }}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-bold" 
-                      [ngClass]="t.tipo === 'RECEITA' ? 'text-[#0a7a3b]' : 'text-error'">
-                    {{ t.tipo === 'RECEITA' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
-                  </td>
+                  
+                  <!-- ROW: CAIXA -->
+                  <ng-container *ngIf="currentBank() === 'CAIXA'">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.dataGasto | date:'dd/MM/yyyy' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.nrDoc || '-' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-on-surface">{{ t.descricao }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.favorecido || '-' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.cpfCnpj || '-' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right" [ngClass]="t.tipo === 'RECEITA' ? 'text-[#0a7a3b]' : 'text-error'">
+                      {{ t.tipo === 'RECEITA' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-on-surface">
+                      R$ {{ t.saldo | number:'1.2-2' }}
+                    </td>
+                  </ng-container>
+
+                  <!-- ROW: PICPAY -->
+                  <ng-container *ngIf="currentBank() === 'PICPAY'">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span [ngClass]="t.tipo === 'RECEITA' ? 'bg-secondary-container/50 text-[#0a7a3b]' : 'bg-error-container/50 text-error'"
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                        {{ t.tipo }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-on-surface">{{ t.favorecido || t.descricao }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.formaPagamento || 'Saldo PicPay' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right" [ngClass]="t.tipo === 'RECEITA' ? 'text-[#0a7a3b]' : 'text-error'">
+                      {{ t.tipo === 'RECEITA' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+                    </td>
+                  </ng-container>
+
+                  <!-- ROW: DEFAULT -->
+                  <ng-container *ngIf="currentBank() !== 'CAIXA' && currentBank() !== 'PICPAY'">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">#{{ t.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-on-surface">
+                      {{ t.descricao }}
+                      <div *ngIf="t.favorecido" class="text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-tight mt-0.5">
+                        {{ t.favorecido }} <span *ngIf="t.cpfCnpj">({{ t.cpfCnpj }})</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container border border-outline-variant">
+                        {{ t.categoria || 'Outros' }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.nrDoc || '-' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ t.dataGasto | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span [ngClass]="t.tipo === 'RECEITA' ? 'bg-secondary-container/50 text-[#0a7a3b]' : 'bg-error-container/50 text-error'"
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                        {{ t.tipo === 'RECEITA' ? 'Recebido' : (t.status === 'Parcelado' ? 'Parcelado' : 'Pago') }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right" [ngClass]="t.tipo === 'RECEITA' ? 'text-[#0a7a3b]' : 'text-error'">
+                      {{ t.tipo === 'RECEITA' ? '+' : '-' }} R$ {{ t.valor | number:'1.2-2' }}
+                    </td>
+                  </ng-container>
+
+                  <!-- ACTIONS (Shared) -->
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-2">
                       <button (click)="abrirModalParaEditar(t)" class="p-1 border border-outline-variant rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
@@ -223,9 +290,9 @@
                     </div>
                   </td>
                 </tr>
-                <tr *ngIf="transacoesFiltradas().length === 0">
-                </tr>
               </tbody>
+
+
             </table>
           </div>
         </div>
