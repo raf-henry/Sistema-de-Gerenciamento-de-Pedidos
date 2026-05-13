@@ -22,4 +22,7 @@ public class User {
     private String password;
 
     private String role;
+
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer tokenVersion = 0;
 }
