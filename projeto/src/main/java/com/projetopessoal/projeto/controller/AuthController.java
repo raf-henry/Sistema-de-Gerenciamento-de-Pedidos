@@ -51,8 +51,8 @@ public class AuthController {
         cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
-        // Para SameSite=None funcionar entre domínios (Local -> Render), o atributo Secure é OBRIGATÓRIO.
-        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=None", 
+        // Partitioned é necessário para versões recentes do Chrome em contextos cross-site (CHIPS)
+        response.addHeader("Set-Cookie", String.format("%s=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=None; Partitioned", 
             name, value, maxAge));
     }
 
